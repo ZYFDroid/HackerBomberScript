@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HackerBomberScriptor", "HackerBomberScriptor\HackerBomberScriptor.csproj", "{0C978A86-3256-48F7-9947-C7B73D6E27D6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ScriptInterpreter", "ScriptInterpreter\ScriptInterpreter.csproj", "{0E903726-2918-49F9-956C-A4F7DEB8664E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{0C978A86-3256-48F7-9947-C7B73D6E27D6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0C978A86-3256-48F7-9947-C7B73D6E27D6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0C978A86-3256-48F7-9947-C7B73D6E27D6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0C978A86-3256-48F7-9947-C7B73D6E27D6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0E903726-2918-49F9-956C-A4F7DEB8664E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0E903726-2918-49F9-956C-A4F7DEB8664E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0E903726-2918-49F9-956C-A4F7DEB8664E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0E903726-2918-49F9-956C-A4F7DEB8664E}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
