@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HackerBomberScriptor", "Hac
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ScriptInterpreter", "ScriptInterpreter\ScriptInterpreter.csproj", "{0E903726-2918-49F9-956C-A4F7DEB8664E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BomberStudio", "BomberStudio\BomberStudio.csproj", "{2C58A0A4-FFA4-4422-9331-3C493DB70C94}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{0E903726-2918-49F9-956C-A4F7DEB8664E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0E903726-2918-49F9-956C-A4F7DEB8664E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0E903726-2918-49F9-956C-A4F7DEB8664E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2C58A0A4-FFA4-4422-9331-3C493DB70C94}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2C58A0A4-FFA4-4422-9331-3C493DB70C94}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2C58A0A4-FFA4-4422-9331-3C493DB70C94}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2C58A0A4-FFA4-4422-9331-3C493DB70C94}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

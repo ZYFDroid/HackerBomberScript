@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{0C978A86-3256-48F7-9947-C7B73D6E27D6}</ProjectGuid>
+    <ProjectGuid>{2C58A0A4-FFA4-4422-9331-3C493DB70C94}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>HackerBomberScriptor</RootNamespace>
-    <AssemblyName>HackerBomberScriptor</AssemblyName>
+    <RootNamespace>BomberStudio</RootNamespace>
+    <AssemblyName>BomberStudio</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -35,7 +35,6 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -84,7 +83,6 @@
     <ProjectReference Include="..\ScriptInterpreter\ScriptInterpreter.csproj">
       <Project>{0e903726-2918-49f9-956c-a4f7deb8664e}</Project>
       <Name>ScriptInterpreter</Name>
-      <EmbedInteropTypes>False</EmbedInteropTypes>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
