@@ -16,10 +16,51 @@ namespace ScriptInterpreter
         public int ProgramCounter = 0;
         public List<string> runtimeStack = new List<string>();
         public SortedList<string, string> runtimeRegister = new SortedList<string, string>();
-        
+
+        //指令集
+        public SortedList<string, CommandHost> InstructionCollection = new SortedList<string, CommandHost>(); 
+        //定义指令对应内容的委托
+        public delegate void CommandHost(StackStateMachine machine, Instruction instruction);
 
         public StackStateMachine() {
+            initializeInstructions();
             Reset();
+        }
+
+        public string RegisterName = "表格";
+        public string StackName = "笔记";
+
+
+        const string COMMAND_PUSH = "插入"; //将内容插入文本栈,内容是 文本
+        const string COMMAND_POP = "删除";//删除文本栈最上面的文本
+        const string COMMAND_CLEAR = "清空";//清空栈
+        const string COMMAND_GET = "获取";//获取寄存器的值并压入栈
+        const string COMMAND_SET = "设为";//设置寄存器的值为当前栈顶并弹出
+
+        const string COMMAND_CLONE = "复读";//复制栈顶元素
+        const string COMMAND_JOIN = "合并"; //从底到顶合并栈中的元素
+        const string COMMAND_PRINT = "输出";//输出栈顶内容(不弹出),或者给定参数
+        const string COMMAND_SWAP = "交换";//交换栈顶两个元素
+
+        const string COMMAND_GEN = "生成";//生成命令,生成指定内容并插入栈,包含子命令
+        const string COMMAND_CODEC_ENCODE = "编码为";//编码命令,编码栈顶文本,包含子命令
+        const string COMMAND_CODEC_DECODE = "解码为";//解码命令,解码栈顶文本,包含子命令
+
+
+        void initializeInstructions() {
+            InstructionCollection.Add(COMMAND_PUSH, new CommandHost(HandlePush));
+            InstructionCollection.Add(COMMAND_POP, new CommandHost(HandlePop));
+            InstructionCollection.Add(COMMAND_CLEAR, new CommandHost(HandleClear));
+            InstructionCollection.Add(COMMAND_GET, new CommandHost(HandleGet));
+            InstructionCollection.Add(COMMAND_SET, new CommandHost(HandleSet));
+            InstructionCollection.Add(COMMAND_CLONE, new CommandHost(HandleClone));
+            InstructionCollection.Add(COMMAND_PRINT, new CommandHost(HandlePrint));
+            InstructionCollection.Add(COMMAND_SWAP, new CommandHost(HandleSwap));
+            InstructionCollection.Add(COMMAND_GEN, new CommandHost(HandleGen));
+            InstructionCollection.Add(COMMAND_JOIN, new CommandHost(HandleJoin));
+            InstructionCollection.Add(COMMAND_CODEC_ENCODE, new CommandHost(HandleEncode));
+            InstructionCollection.Add(COMMAND_CODEC_DECODE, new CommandHost(HandleDecode));
+
         }
 
         public void Compile(string code) {
@@ -55,129 +96,133 @@ namespace ScriptInterpreter
                 Step();
             }
         }
+        
+        void performInstruction(Instruction instruction) {
+            if (InstructionCollection.ContainsKey(instruction.InstructionCode)) {
+                CommandHost host = InstructionCollection[instruction.InstructionCode];
+                host.Invoke(this, instruction);
+                return;
+            }
+            throw new ArgumentException("没有这样的命令:"+instruction.InstructionCode);
+        }
 
-        const string COMMAND_PUSH = "插入"; //将内容插入文本栈,内容是 文本
-        const string COMMAND_POP = "删除";//删除文本栈最上面的文本
-        const string COMMAND_CLEAR = "清空";//清空栈
-        const string COMMAND_GET = "获取";//获取寄存器的值并压入栈
-        const string COMMAND_SET = "设为";//设置寄存器的值为当前栈顶并弹出
+        #region 指令实现
 
-        const string COMMAND_JOIN = "合并"; //从底到顶合并栈中的元素
-        const string COMMAND_PRINT = "输出";//输出栈顶内容(不弹出),或者给定参数
-        const string COMMAND_SWAP = "交换";//交换栈顶两个元素
+        [Description("这是一个描述")]
+        public void HandlePush(StackStateMachine machine, Instruction instruction) {
+            if (instruction.Args.Length < 1) { throw new ArgumentException(instruction.InstructionCode + " 命令需要参数"); }
+            push(instruction.Args[0].Value);
+        }
 
-        const string COMMAND_GEN = "生成";//生成命令,生成指定内容并插入栈,包含子命令
+        public void HandlePop(StackStateMachine machine, Instruction instruction) {
+            if (runtimeStack.Count < 1) { throw new InvalidOperationException(StackName+"是空的,删除失败"); }
+            pop();
+        }
+
+        public void HandleGet(StackStateMachine machine, Instruction instruction) {
+            if (instruction.Args.Length < 1) { throw new ArgumentException(instruction.InstructionCode + " 命令需要参数"); }
+            push(get(instruction.Args[0].Value));
+        }
+
+        public void HandleSet(StackStateMachine machine, Instruction instruction) {
+            if (instruction.Args.Length < 1) { throw new ArgumentException(instruction.InstructionCode + " 命令需要1-2个参数"); }
+            if (instruction.Args.Length >= 2)
+            {
+                set(instruction.Args[0].Value, instruction.Args[1].Value);
+            }
+            else
+            {
+                set(instruction.Args[0].Value, pop());
+            }
+        }
+
+        public void HandleClear(StackStateMachine machine, Instruction instruction) {
+            runtimeStack.Clear();
+        }
+
+        public void HandleJoin(StackStateMachine machine, Instruction instruction) {
+            StringBuilder sb = new StringBuilder();
+            foreach (string s in runtimeStack)
+            {
+                sb.Append(s);
+            }
+            runtimeStack.Clear();
+            push(sb.ToString());
+        }
+
+        public void HandlePrint(StackStateMachine machine, Instruction instruction) {
+            if (instruction.Args.Length > 0)
+            {
+                if (instruction.Args[0].ArgType == ArgType.ENUM)
+                {
+                    if (instruction.Args[0].Value == "换行")
+                    {
+                        print(Environment.NewLine);
+                    }
+                    else
+                    {
+                        print(instruction.Args[0].Value);
+                    }
+                }
+                else
+                {
+                    print(instruction.Args[0].Value);
+                }
+            }
+            else
+            {
+                if (runtimeStack.Count < 2) { throw new ArgumentException(instruction.InstructionCode + " 需要"+StackName+"有至少一个文本"); }
+                print(peek());
+            }
+        }
+
+        public void HandleSwap(StackStateMachine machine, Instruction instruction) {
+            if (runtimeStack.Count < 2) { throw new ArgumentException(instruction.InstructionCode + " 需要" + StackName + "有至少两个文本"); }
+            string bottom = pop();
+            string top = pop();
+            push(bottom);
+            push(top);
+        }
+
+        public void HandleEncode(StackStateMachine machine, Instruction instruction) {
+            if (instruction.Args.Length < 1) { throw new ArgumentException(instruction.InstructionCode + " 命令需要参数"); }
+            encode(instruction.Args);
+        }
+
+        public void HandleDecode(StackStateMachine machine, Instruction instruction) {
+            if (instruction.Args.Length < 1) { throw new ArgumentException(instruction.InstructionCode + " 命令需要参数"); }
+            decode(instruction.Args);
+        }
+
+        public void HandleGen(StackStateMachine machine, Instruction instruction) {
+            if (instruction.Args.Length < 1) { throw new ArgumentException(instruction.InstructionCode + " 命令需要参数"); }
+            gen(instruction.Args);
+        }
+
+        public void HandleClone(StackStateMachine machine, Instruction instruction) {
+            if (runtimeStack.Count < 1) { throw new InvalidOperationException(instruction.InstructionCode + " 命令要求"+StackName+"内至少有一条内容"); }
+        }
+
+        #endregion
+
+        #region 内部方法
 
         const string COMMAND_GEN_QQ = "QQ";
         const string COMMAND_GEN_PASSWORD = "密码";
+        const string COMMAND_GEN_NATURALPASSWORD = "自然的密码";
         const string COMMAND_GEN_TIMESTAMP = "时间戳";
+        const string COMMAND_GEN_NATRALNAME = "姓名";
+        const string COMMAND_GEN_IDCARDNUMBER = "身份证号";
+        const string COMMAND_GEN_TELEPHONE = "电话";
+        const string COMMAND_GEN_MOBILEPHONE = "手机号";
+        const string COMMAND_GEN_EMAIL = "电子邮件";
+        const string COMMAND_GEN_BANKCARD = "银行卡号";
+        const string COMMAND_GEN_PAYMENTPASSWORD = "支付密码";
 
-        const string COMMAND_CODEC_ENCODE = "编码为";//编码命令,编码栈顶文本,包含子命令
-        const string COMMAND_CODEC_DECODE = "解码为";//解码命令,解码栈顶文本,包含子命令
+        const string COMMAND_GEN_DIRTYWORD = "脏话";
+        const string COMMAND_GEN_AWESOMEWORD = "骚话";
 
-        const string COMMAND_CODEC_TYPE_BASE64 = "BASE64";//base64编码解码
-        const string COMMAND_CODEC_TYPE_URL = "URL";//URL编码解码
-        const string COMMAND_CODEC_TYPE_MD5 = "MD5";//URL编码解码
 
-        void performInstruction(Instruction instruction) {
-            switch (instruction.InstructionCode) {
-
-                case COMMAND_PUSH:
-                    {
-                        push(instruction.Args[0].Value);
-                    }
-                    break;
-
-                case COMMAND_POP:
-                    {
-                        pop();
-                    }
-                    break;
-
-                case COMMAND_CLEAR:
-                    {
-                        runtimeStack.Clear();
-                    }
-                    break;
-
-                case COMMAND_GET:
-                    {
-                        push(get(instruction.Args[0].Value));
-                    }
-                    break;
-
-                case COMMAND_SET:
-                    {
-                        if (instruction.Args.Length >= 2) {
-                            set(instruction.Args[0].Value, instruction.Args[1].Value);
-                        }
-                        else {
-                            set(instruction.Args[0].Value, pop());
-                        }
-                    }
-                    break;
-
-                case COMMAND_JOIN:
-                    {
-                        StringBuilder sb = new StringBuilder();
-                        foreach (string s in runtimeStack) {
-                            sb.Append(s);
-                        }
-                        runtimeStack.Clear();
-                        push(sb.ToString());
-                    }
-                    break;
-                case COMMAND_SWAP:
-                    {
-                        string bottom = pop();
-                        string top = pop();
-                        push(bottom);
-                        push(top);
-                    }
-                    break;
-                case COMMAND_PRINT:
-                    {
-                        if (instruction.Args.Length > 0)
-                        {
-                            if (instruction.Args[0].ArgType == ArgType.ENUM)
-                            {
-                                if (instruction.Args[0].Value == "换行")
-                                {
-                                    print(Environment.NewLine);
-                                }
-                                else {
-                                    print(instruction.Args[0].Value);
-                                }
-                            }
-                            else {
-                                print(instruction.Args[0].Value);
-                            }
-                        }
-                        else {
-                            print(peek());
-                        }
-                    }
-                    break;
-                case COMMAND_GEN:
-                    {
-                        gen(instruction.Args);
-                    }
-                    break;
-                case COMMAND_CODEC_ENCODE:
-                    {
-                        encode(instruction.Args);
-                    }
-                    break;
-                case COMMAND_CODEC_DECODE:
-                    {
-                        decode(instruction.Args);
-                    }
-                    break;
-                    
-                default:
-                    throw new ArgumentException("没有这样的指令:"+instruction.InstructionCode);
-            }
-        }
 
         private void gen(CodeArg[] args) {
             switch (args[0].Value) {
@@ -202,6 +247,11 @@ namespace ScriptInterpreter
 
             }
         }
+
+
+        const string COMMAND_CODEC_TYPE_BASE64 = "BASE64";//base64编码解码
+        const string COMMAND_CODEC_TYPE_URL = "URL";//URL编码解码
+        const string COMMAND_CODEC_TYPE_MD5 = "MD5";//MD5编码
 
         private void encode(CodeArg[] args)
         {
@@ -294,6 +344,7 @@ namespace ScriptInterpreter
             }
         }
 
+        #endregion
 
         public event EventHandler<StackStateMachine> OnProgramFinish;
         public event EventHandler<string> OnProgramPrint;
@@ -425,7 +476,7 @@ namespace ScriptInterpreter
             return _Value;
         }
     }
-    enum ArgType {
+    public enum ArgType {
         ENUM,TEXT
     }
     public static class TextUtil {
@@ -541,6 +592,23 @@ namespace ScriptInterpreter
                 }
             }
             return sb.Append("\"").ToString();
+        }
+    }
+
+    public class Description : Attribute {
+        string description;
+
+        public Description(string description)
+        {
+            this.description = description;
+        }
+
+        public string Value
+        {
+            get
+            {
+                return description;
+            }
         }
     }
 }
