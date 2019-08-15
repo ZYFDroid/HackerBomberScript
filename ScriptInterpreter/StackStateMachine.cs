@@ -193,10 +193,10 @@ namespace ScriptInterpreter
             if (instruction.Args.Length < 1) { throw new ArgumentException(instruction.InstructionCode + " 命令需要参数"); }
             decode(instruction.Args);
         }
-
+        GenerateHelper generateHelper = new GenerateHelper();
         public void HandleGen(StackStateMachine machine, Instruction instruction) {
             if (instruction.Args.Length < 1) { throw new ArgumentException(instruction.InstructionCode + " 命令需要参数"); }
-            gen(instruction.Args);
+            generateHelper.InvokeGenerate(machine, instruction);
         }
 
         public void HandleClone(StackStateMachine machine, Instruction instruction) {
@@ -206,49 +206,7 @@ namespace ScriptInterpreter
         #endregion
 
         #region 内部方法
-
-        const string COMMAND_GEN_QQ = "QQ";
-        const string COMMAND_GEN_PASSWORD = "密码";
-        const string COMMAND_GEN_NATURALPASSWORD = "自然的密码";
-        const string COMMAND_GEN_TIMESTAMP = "时间戳";
-        const string COMMAND_GEN_NATRALNAME = "姓名";
-        const string COMMAND_GEN_IDCARDNUMBER = "身份证号";
-        const string COMMAND_GEN_TELEPHONE = "电话";
-        const string COMMAND_GEN_MOBILEPHONE = "手机号";
-        const string COMMAND_GEN_EMAIL = "电子邮件";
-        const string COMMAND_GEN_BANKCARD = "银行卡号";
-        const string COMMAND_GEN_PAYMENTPASSWORD = "支付密码";
-
-        const string COMMAND_GEN_DIRTYWORD = "脏话";
-        const string COMMAND_GEN_AWESOMEWORD = "骚话";
-
-
-
-        private void gen(CodeArg[] args) {
-            switch (args[0].Value) {
-                case (COMMAND_GEN_QQ):
-                    {
-                        push(InstructionUtils.RandomQQNumber());
-                    }
-                    break;
-                case (COMMAND_GEN_PASSWORD):
-                    {
-                        push(InstructionUtils.RandomPassword());
-                    }
-                    break;
-                case (COMMAND_GEN_TIMESTAMP):
-                    {
-                        push(InstructionUtils.GetTimestamp().ToString());
-                    }
-                    break;
-                default: {
-                        throw new ArgumentException("不能生成这个:"+args[0].Value);
-                    }
-
-            }
-        }
-
-
+        
         const string COMMAND_CODEC_TYPE_BASE64 = "BASE64";//base64编码解码
         const string COMMAND_CODEC_TYPE_URL = "URL";//URL编码解码
         const string COMMAND_CODEC_TYPE_MD5 = "MD5";//MD5编码
@@ -297,8 +255,6 @@ namespace ScriptInterpreter
                     {
                         throw new ArgumentException("MD5理论上不能解码,只能编码");
                     }
-                    break;
-
                 default:
                     {
                         throw new ArgumentException("不能解码这个:" + args[0].Value);
@@ -349,6 +305,91 @@ namespace ScriptInterpreter
         public event EventHandler<StackStateMachine> OnProgramFinish;
         public event EventHandler<string> OnProgramPrint;
     }
+
+    public class GenerateHelper {
+        //指令集
+        public SortedList<string, CommandHost> InstructionCollection = new SortedList<string, CommandHost>();
+        //定义指令对应内容的委托
+        public delegate void CommandHost(StackStateMachine machine, Instruction instruction);
+
+        public GenerateHelper() {
+            initializeCommands();
+        }
+        void initializeCommands() {
+            InstructionCollection.Add(COMMAND_GEN_QQ, new CommandHost(GenerateQQ));
+            InstructionCollection.Add(COMMAND_GEN_PASSWORD, new CommandHost(GeneratePassword));
+            InstructionCollection.Add(COMMAND_GEN_TIMESTAMP, new CommandHost(GenerateTimeStamp));
+            //InstructionCollection.Add(COMMAND_GEN_NATURALPASSWORD, new CommandHost(GenerateNaturePassword));
+            //InstructionCollection.Add(COMMAND_GEN_NATRALNAME, new CommandHost(GenerateName));
+            //InstructionCollection.Add(COMMAND_GEN_IDCARDNUMBER, new CommandHost(GenerateIDCardNumber));
+            //InstructionCollection.Add(COMMAND_GEN_EMAIL, new CommandHost(GenerateEmail));
+            //InstructionCollection.Add(COMMAND_GEN_TELEPHONE, new CommandHost(GenerateTelephone));
+            //InstructionCollection.Add(COMMAND_GEN_MOBILEPHONE, new CommandHost(GenerateMobilePhone));
+            //InstructionCollection.Add(COMMAND_GEN_BANKCARD, new CommandHost(GenerateBankCard));
+            //InstructionCollection.Add(COMMAND_GEN_PAYMENTPASSWORD, new CommandHost(GeneratePaymentPassword));
+            //InstructionCollection.Add(COMMAND_GEN_DIRTYWORD, new CommandHost(GenerateDirtyWord));
+            //InstructionCollection.Add(COMMAND_GEN_AWESOMEWORD, new CommandHost(GenerateAwesomeWord));
+        }
+
+        public void InvokeGenerate(StackStateMachine machine,Instruction instruction) {
+            if (InstructionCollection.ContainsKey(instruction.InstructionCode))
+            {
+                CommandHost host = InstructionCollection[instruction.InstructionCode];
+                host.Invoke(machine, instruction);
+                return;
+            }
+            throw new ArgumentException("不能生成 " + instruction.InstructionCode);
+        }
+
+        const string COMMAND_GEN_QQ = "QQ";
+        const string COMMAND_GEN_PASSWORD = "密码";
+        const string COMMAND_GEN_TIMESTAMP = "时间戳";
+
+        const string COMMAND_GEN_NATURALPASSWORD = "自然的密码";
+        const string COMMAND_GEN_NATRALNAME = "姓名";
+        const string COMMAND_GEN_IDCARDNUMBER = "身份证号";
+        const string COMMAND_GEN_TELEPHONE = "电话";
+        const string COMMAND_GEN_MOBILEPHONE = "手机号";
+        const string COMMAND_GEN_EMAIL = "电子邮件";
+        const string COMMAND_GEN_BANKCARD = "银行卡号";
+        const string COMMAND_GEN_PAYMENTPASSWORD = "支付密码";
+
+        const string COMMAND_GEN_DIRTYWORD = "脏话";
+        const string COMMAND_GEN_AWESOMEWORD = "骚话";
+
+        void GenerateQQ(StackStateMachine machine, Instruction instruction) {
+            machine.runtimeStack.Add(InstructionUtils.RandomQQNumber());
+        }
+
+        void GeneratePassword(StackStateMachine machine, Instruction instruction) {
+            machine.runtimeStack.Add(InstructionUtils.RandomPassword());
+        }
+        void GenerateTimeStamp(StackStateMachine machine, Instruction instruction) {
+            machine.runtimeStack.Add(InstructionUtils.GetTimestamp().ToString());
+        }
+
+        void GenerateNaturePassword(StackStateMachine machine, Instruction instruction) { }
+        void GenerateName(StackStateMachine machine, Instruction instruction) { }
+        void GenerateIDCardNumber(StackStateMachine machine, Instruction instruction) { }
+        void GenerateTelephone(StackStateMachine machine, Instruction instruction) { }
+        void GenerateMobilePhone(StackStateMachine machine, Instruction instruction) { }
+        void GenerateEmail(StackStateMachine machine, Instruction instruction) { }
+        void GenerateBankCard(StackStateMachine machine, Instruction instruction) { }
+        void GeneratePaymentPassword(StackStateMachine machine, Instruction instruction) { }
+        void GenerateDirtyWord(StackStateMachine machine, Instruction instruction) { }
+        void GenerateAwesomeWord(StackStateMachine machine, Instruction instruction) { }
+
+
+        #region 内部方法
+        public DateTime randomDate() {
+            double r = new Random().NextDouble();
+            r = r * 365.24d * 60d;
+            return (DateTime.Now - TimeSpan.FromDays(r)).Date;
+        }
+        #endregion
+
+    }
+
     public static class InstructionUtils
     {
         public static long GetTimestamp()
@@ -594,7 +635,6 @@ namespace ScriptInterpreter
             return sb.Append("\"").ToString();
         }
     }
-
     public class Description : Attribute {
         string description;
 
