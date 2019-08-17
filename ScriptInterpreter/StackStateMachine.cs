@@ -78,14 +78,24 @@ namespace ScriptInterpreter
         }
 
         public void Step() {
+            
             if (ProgramCounter >= instructions.Count)
             {
                 return;
             }
-            performInstruction(instructions[ProgramCounter]);
+            try
+            {
+                performInstruction(instructions[ProgramCounter]);
+            }
+            catch (Exception ex)
+            {
+                throw new InvalidOperationException("无法执行“" + instructions[ProgramCounter].ToString() + "”，因为 " + ex.Message);
+            }
             ProgramCounter++;
-            if (ProgramCounter >= instructions.Count) {
-                if (null != OnProgramFinish) {
+            if (ProgramCounter >= instructions.Count)
+            {
+                if (null != OnProgramFinish)
+                {
                     OnProgramFinish.Invoke(this, this);
                 }
             }
@@ -107,15 +117,14 @@ namespace ScriptInterpreter
         }
 
         #region 指令实现
-
-        [Description("这是一个描述")]
+        [Description("将参数中的内容插入到笔记区中，例如：\r\n插入 \"http://nhml.xyz/index.php\"")]
         public void HandlePush(StackStateMachine machine, Instruction instruction) {
             if (instruction.Args.Length < 1) { throw new ArgumentException(instruction.InstructionCode + " 命令需要参数"); }
             push(instruction.Args[0].Value);
         }
-
+    
         public void HandlePop(StackStateMachine machine, Instruction instruction) {
-            if (runtimeStack.Count < 1) { throw new InvalidOperationException(StackName+"是空的,删除失败"); }
+            if (runtimeStack.Count < 1) { throw new InvalidOperationException(StackName+" 中是空的,删除失败"); }
             pop();
         }
 
@@ -126,12 +135,14 @@ namespace ScriptInterpreter
 
         public void HandleSet(StackStateMachine machine, Instruction instruction) {
             if (instruction.Args.Length < 1) { throw new ArgumentException(instruction.InstructionCode + " 命令需要1-2个参数"); }
+            
             if (instruction.Args.Length >= 2)
             {
                 set(instruction.Args[0].Value, instruction.Args[1].Value);
             }
             else
             {
+                if (runtimeStack.Count < 1) { throw new InvalidOperationException(instruction.InstructionCode + " 命令在只使用一个参数时需要 " + StackName + " 中至少有一条文本"); }
                 set(instruction.Args[0].Value, pop());
             }
         }
@@ -171,13 +182,13 @@ namespace ScriptInterpreter
             }
             else
             {
-                if (runtimeStack.Count < 2) { throw new ArgumentException(instruction.InstructionCode + " 需要"+StackName+"有至少一个文本"); }
+                if (runtimeStack.Count < 2) { throw new ArgumentException(instruction.InstructionCode + " 需要 "+StackName+" 中有至少一个文本"); }
                 print(peek());
             }
         }
 
         public void HandleSwap(StackStateMachine machine, Instruction instruction) {
-            if (runtimeStack.Count < 2) { throw new ArgumentException(instruction.InstructionCode + " 需要" + StackName + "有至少两个文本"); }
+            if (runtimeStack.Count < 2) { throw new ArgumentException(instruction.InstructionCode + " 需要 " + StackName + " 中有至少两个文本"); }
             string bottom = pop();
             string top = pop();
             push(bottom);
@@ -186,11 +197,19 @@ namespace ScriptInterpreter
 
         public void HandleEncode(StackStateMachine machine, Instruction instruction) {
             if (instruction.Args.Length < 1) { throw new ArgumentException(instruction.InstructionCode + " 命令需要参数"); }
+            if (runtimeStack.Count < 1)
+            {
+                throw new InvalidOperationException(instruction.InstructionCode + " 命令需要 " + StackName + " 中至少有一条文本");
+            }
             encode(instruction.Args);
         }
 
         public void HandleDecode(StackStateMachine machine, Instruction instruction) {
             if (instruction.Args.Length < 1) { throw new ArgumentException(instruction.InstructionCode + " 命令需要参数"); }
+            if (runtimeStack.Count < 1)
+            {
+                throw new InvalidOperationException(instruction.InstructionCode + " 命令需要 " + StackName + " 中至少有一条文本");
+            }
             decode(instruction.Args);
         }
         GenerateHelper generateHelper = new GenerateHelper();
@@ -200,11 +219,10 @@ namespace ScriptInterpreter
         }
 
         public void HandleClone(StackStateMachine machine, Instruction instruction) {
-            if (runtimeStack.Count < 1) { throw new InvalidOperationException(instruction.InstructionCode + " 命令要求"+StackName+"内至少有一条内容"); }
+            if (runtimeStack.Count < 1) { throw new InvalidOperationException(instruction.InstructionCode + " 命令要求 "+StackName+" 中至少有一条文本"); }
         }
 
         #endregion
-
         #region 内部方法
         
         const string COMMAND_CODEC_TYPE_BASE64 = "BASE64";//base64编码解码
@@ -332,13 +350,13 @@ namespace ScriptInterpreter
         }
 
         public void InvokeGenerate(StackStateMachine machine,Instruction instruction) {
-            if (InstructionCollection.ContainsKey(instruction.InstructionCode))
+            if (InstructionCollection.ContainsKey(instruction.Args[0].Value))
             {
-                CommandHost host = InstructionCollection[instruction.InstructionCode];
+                CommandHost host = InstructionCollection[instruction.Args[0].Value];
                 host.Invoke(machine, instruction);
                 return;
             }
-            throw new ArgumentException("不能生成 " + instruction.InstructionCode);
+            throw new ArgumentException("不能生成 " + instruction.Args[0].Value);
         }
 
         const string COMMAND_GEN_QQ = "QQ";
@@ -468,6 +486,15 @@ namespace ScriptInterpreter
             }
             this.args = args.ToArray();
         }
+        public override string ToString()
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.Append(instructionCode);
+            foreach (CodeArg arg in Args) {
+                sb.Append(" ").Append(arg.ToString());
+            }
+            return sb.ToString();
+        }
     }
     public class CodeArg {
         string _Value;
@@ -522,66 +549,82 @@ namespace ScriptInterpreter
     }
     public static class TextUtil {
         public static string[] codeSplit(String line) {
-            List<string> datas = new List<string>();
-            StringBuilder current = new StringBuilder();
-            int ptr = 0;
-            bool inBlock = false;
-            bool inText = false;
-            do
-            {
-                char chr = line[ptr];
-                if (!inBlock)
-                {
-                    if (chr == ' ')
-                    {
-                        ptr++;
-                        continue;
-                    }
-                    else {
-                        if (current.Length > 0) {
-                            datas.Add(current.ToString());
-                            current.Clear();
-                        }
-                        inBlock = true;
-                    }
 
-                }
-                if(inBlock){
-                    if (current.Length == 0) {
-                        inText = chr == '\"';
-                        current.Append(chr);
-                        ptr++;
-                        chr = line[ptr];
-                    }
-                    if (inText)
+            try
+            {
+
+                List<string> datas = new List<string>();
+                StringBuilder current = new StringBuilder();
+                int ptr = 0;
+                bool inBlock = false;
+                bool inText = false;
+                do
+                {
+                    char chr = line[ptr];
+                    if (!inBlock)
                     {
-                        current.Append(chr);
-                        if (chr == '\"') {
-                            inBlock = false;
+                        if (chr == ' ')
+                        {
+                            ptr++;
+                            continue;
                         }
-                        if (chr == '\\') {
+                        else
+                        {
+                            if (current.Length > 0)
+                            {
+                                datas.Add(current.ToString());
+                                current.Clear();
+                            }
+                            inBlock = true;
+                        }
+
+                    }
+                    if (inBlock)
+                    {
+                        if (current.Length == 0)
+                        {
+                            inText = chr == '\"';
+                            current.Append(chr);
                             ptr++;
                             chr = line[ptr];
+                        }
+                        if (inText)
+                        {
                             current.Append(chr);
-                        }
+                            if (chr == '\"')
+                            {
+                                inBlock = false;
+                            }
+                            if (chr == '\\')
+                            {
+                                ptr++;
+                                chr = line[ptr];
+                                current.Append(chr);
+                            }
 
-                    }
-                    else {
-                        current.Append(chr);
-                        if (chr == ' ') {
-                            current.Remove(current.Length - 1, 1);
-                            inBlock = false;
+                        }
+                        else
+                        {
+                            current.Append(chr);
+                            if (chr == ' ')
+                            {
+                                current.Remove(current.Length - 1, 1);
+                                inBlock = false;
+                            }
                         }
                     }
+                    ptr++;
+                } while (ptr < line.Length);
+                if (current.Length > 0)
+                {
+                    datas.Add(current.ToString());
+                    current.Clear();
                 }
-                ptr++;
-            } while (ptr < line.Length);
-            if (current.Length > 0)
-            {
-                datas.Add(current.ToString());
-                current.Clear();
+                return datas.ToArray();
             }
-            return datas.ToArray();
+            catch (Exception ex) {
+                throw new ArgumentException("语法错误出现在：" + line);
+            }
         }
         public static string unescapeText(string src) {
             if (src.StartsWith("\"") && src.EndsWith("\"") && src.Length>=2) {

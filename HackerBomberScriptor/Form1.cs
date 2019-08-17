@@ -58,7 +58,13 @@ namespace HackerBomberScriptor
             ssm.instructions.Clear();
             ssm.Compile(textBox1.Text);
             begintime = InstructionUtils.GetTimestamp();
-            ssm.Run();
+            try
+            {
+                ssm.Run();
+            }
+            catch (Exception ex) {
+                MessageBox.Show(ex.Message,"运行时错误");
+            }
         }
     }
 }
