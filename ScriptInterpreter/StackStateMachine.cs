@@ -66,7 +66,7 @@ namespace ScriptInterpreter
         public void Compile(string code) {
             string[] lines = code.Split(new char[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
             foreach(string line in lines){
-                if (line.Trim().StartsWith("#")) { break; }
+                if (line.Trim().StartsWith("#")) { continue; }
                 instructions.Add(new Instruction(line.Trim()));
             }
         }
