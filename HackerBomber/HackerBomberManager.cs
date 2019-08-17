@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ScriptInterpreter;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -46,8 +47,12 @@ namespace 专治骗子
         }
         private void run() {
             while (isStarted) {
-                if (mBomber.perform()) {
+                if (mBomber.perform())
+                {
                     mSuccessCount++;
+                }
+                else {
+                    Thread.Sleep(100);
                 }
             }
         }
@@ -274,4 +279,63 @@ namespace 专治骗子
 
 
     }
+
+
+    public class ScriptedBomber : IBomber
+    {
+        StackStateMachine machine = new StackStateMachine();
+        public ScriptedBomber(String script)
+        {
+            machine.Compile(script);
+            machine.OnProgramPrint += Machine_OnProgramPrint;
+        }
+        StringBuilder printContent = new StringBuilder();
+        private void Machine_OnProgramPrint(object sender, string e)
+        {
+            printContent.Append(e);
+        }
+
+        public event EventHandler<BomberResultEventArgs> OnBomberComplete;
+
+        public bool perform()
+        {
+            try
+            {
+                string url;
+                string method;
+                string content;
+
+                string printcontent;
+
+                lock (machine)
+                {
+                    machine.Reset();
+                    machine.Run();
+                    url = machine.runtimeRegister["提交URL"];
+                    method = machine.runtimeRegister["提交方法"];
+                    content = machine.runtimeRegister["提交内容"];
+                    printcontent = this.printContent.ToString();
+                    printContent.Clear();
+                }
+                HttpWebRequest req = BomberUtils.MakeHttpRequest(url, content, method);
+                string result = BomberUtils.GetHttpResponse(req);
+                BomberResultEventArgs args = new BomberResultEventArgs(true, "", "", printcontent, result, null);
+                if (null != OnBomberComplete)
+                {
+                    OnBomberComplete.Invoke(this, args);
+                }
+                return true;
+            }
+            catch (Exception ex)
+            {
+                BomberResultEventArgs args = new BomberResultEventArgs(false, "", "", "", ex.Message, ex);
+                if (null != OnBomberComplete)
+                {
+                    OnBomberComplete.Invoke(this, args);
+                }
+                return false;
+            }
+        }
+    }
+
 }

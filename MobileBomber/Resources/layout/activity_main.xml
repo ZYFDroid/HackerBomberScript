@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:minWidth="25px"
+	android:minHeight="25px"
+	android:orientation="vertical">
+	<EditText
+		android:inputType="textMultiLine"
+		android:layout_width="match_parent"
+		android:layout_height="193.5dp"
+		android:id="@+id/txtScript"
+		android:gravity="top|start"
+		android:hint="在这里输入轰炸的脚本" />
+	<Button
+		android:text="开炮"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:id="@+id/btnStart" />
+	<TextView
+		android:text="[输出]"
+		android:textAppearance="?android:attr/textAppearanceSmall"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_weight="1.0"
+		android:id="@+id/txtOutput"
+		android:gravity="top|start" />
+	<TextView
+		android:id="@+id/txtStatus"
+		android:text="[统计数据]"
+		android:textAppearance="?android:attr/textAppearanceSmall"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:gravity="center" />
+</LinearLayout>

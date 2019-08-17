@@ -1,9 +1,13 @@
-HackerBomberScriptor/bin
-HackerBomberScriptor/obj
+HackerBomberApplication/bin
+HackerBomberApplication/obj
+HackerBomberCrossPlatform/bin
+HackerBomberCrossPlatform/obj
 ScriptInterpreter/bin
 ScriptInterpreter/obj
 BomberStudio/bin
 BomberStudio/obj
 HackerBomber/bin
 HackerBomber/obj
+MobileBomber/bin
+MobileBomber/obj
 .vs

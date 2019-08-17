@@ -4,7 +4,7 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
-using System.Web;
+
 
 namespace ScriptInterpreter
 {
@@ -18,7 +18,7 @@ namespace ScriptInterpreter
         public SortedList<string, string> runtimeRegister = new SortedList<string, string>();
 
         //指令集
-        public SortedList<string, CommandHost> InstructionCollection = new SortedList<string, CommandHost>(); 
+        public SortedList<string, CommandHost> InstructionCollection = new SortedList<string, CommandHost>();
         //定义指令对应内容的委托
         public delegate void CommandHost(StackStateMachine machine, Instruction instruction);
 
@@ -65,7 +65,7 @@ namespace ScriptInterpreter
 
         public void Compile(string code) {
             string[] lines = code.Split(new char[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
-            foreach(string line in lines){
+            foreach (string line in lines) {
                 if (line.Trim().StartsWith("#")) { continue; }
                 instructions.Add(new Instruction(line.Trim()));
             }
@@ -78,7 +78,7 @@ namespace ScriptInterpreter
         }
 
         public void Step() {
-            
+
             if (ProgramCounter >= instructions.Count)
             {
                 return;
@@ -106,14 +106,14 @@ namespace ScriptInterpreter
                 Step();
             }
         }
-        
+
         void performInstruction(Instruction instruction) {
             if (InstructionCollection.ContainsKey(instruction.InstructionCode)) {
                 CommandHost host = InstructionCollection[instruction.InstructionCode];
                 host.Invoke(this, instruction);
                 return;
             }
-            throw new ArgumentException("没有这样的命令:"+instruction.InstructionCode);
+            throw new ArgumentException("没有这样的命令:" + instruction.InstructionCode);
         }
 
         #region 指令实现
@@ -122,9 +122,9 @@ namespace ScriptInterpreter
             if (instruction.Args.Length < 1) { throw new ArgumentException(instruction.InstructionCode + " 命令需要参数"); }
             push(instruction.Args[0].Value);
         }
-    
+
         public void HandlePop(StackStateMachine machine, Instruction instruction) {
-            if (runtimeStack.Count < 1) { throw new InvalidOperationException(StackName+" 中是空的,删除失败"); }
+            if (runtimeStack.Count < 1) { throw new InvalidOperationException(StackName + " 中是空的,删除失败"); }
             pop();
         }
 
@@ -135,7 +135,7 @@ namespace ScriptInterpreter
 
         public void HandleSet(StackStateMachine machine, Instruction instruction) {
             if (instruction.Args.Length < 1) { throw new ArgumentException(instruction.InstructionCode + " 命令需要1-2个参数"); }
-            
+
             if (instruction.Args.Length >= 2)
             {
                 set(instruction.Args[0].Value, instruction.Args[1].Value);
@@ -182,7 +182,7 @@ namespace ScriptInterpreter
             }
             else
             {
-                if (runtimeStack.Count < 2) { throw new ArgumentException(instruction.InstructionCode + " 需要 "+StackName+" 中有至少一个文本"); }
+                if (runtimeStack.Count < 2) { throw new ArgumentException(instruction.InstructionCode + " 需要 " + StackName + " 中有至少一个文本"); }
                 print(peek());
             }
         }
@@ -219,12 +219,12 @@ namespace ScriptInterpreter
         }
 
         public void HandleClone(StackStateMachine machine, Instruction instruction) {
-            if (runtimeStack.Count < 1) { throw new InvalidOperationException(instruction.InstructionCode + " 命令要求 "+StackName+" 中至少有一条文本"); }
+            if (runtimeStack.Count < 1) { throw new InvalidOperationException(instruction.InstructionCode + " 命令要求 " + StackName + " 中至少有一条文本"); }
         }
 
         #endregion
         #region 内部方法
-        
+
         const string COMMAND_CODEC_TYPE_BASE64 = "BASE64";//base64编码解码
         const string COMMAND_CODEC_TYPE_URL = "URL";//URL编码解码
         const string COMMAND_CODEC_TYPE_MD5 = "MD5";//MD5编码
@@ -298,7 +298,7 @@ namespace ScriptInterpreter
             return runtimeRegister[key];
         }
 
-        private void set(string key,string value) {
+        private void set(string key, string value) {
             if (runtimeRegister.ContainsKey(key))
             {
                 runtimeRegister[key] = value;
@@ -349,7 +349,7 @@ namespace ScriptInterpreter
             //InstructionCollection.Add(COMMAND_GEN_AWESOMEWORD, new CommandHost(GenerateAwesomeWord));
         }
 
-        public void InvokeGenerate(StackStateMachine machine,Instruction instruction) {
+        public void InvokeGenerate(StackStateMachine machine, Instruction instruction) {
             if (InstructionCollection.ContainsKey(instruction.Args[0].Value))
             {
                 CommandHost host = InstructionCollection[instruction.Args[0].Value];
@@ -446,7 +446,7 @@ namespace ScriptInterpreter
         {
             return Base64Decode(input, Encoding.Default);
         }
-        public static string Base64Decode(string input,Encoding encoding) {
+        public static string Base64Decode(string input, Encoding encoding) {
             return encoding.GetString(Convert.FromBase64String(input));
         }
         public static string UrlEncode(string raw) { return HttpUtility.UrlEncode(raw); }
@@ -528,7 +528,7 @@ namespace ScriptInterpreter
             if (src.StartsWith("\""))
             {
                 _ArgType = ArgType.TEXT;
-                _Value = TextUtil.unescapeText(src); 
+                _Value = TextUtil.unescapeText(src);
             }
             else {
                 _ArgType = ArgType.ENUM;
@@ -545,7 +545,7 @@ namespace ScriptInterpreter
         }
     }
     public enum ArgType {
-        ENUM,TEXT
+        ENUM, TEXT
     }
     public static class TextUtil {
         public static string[] codeSplit(String line) {
@@ -627,7 +627,7 @@ namespace ScriptInterpreter
             }
         }
         public static string unescapeText(string src) {
-            if (src.StartsWith("\"") && src.EndsWith("\"") && src.Length>=2) {
+            if (src.StartsWith("\"") && src.EndsWith("\"") && src.Length >= 2) {
                 string raw = src.Substring(1, src.Length - 2);
                 StringBuilder sb = new StringBuilder();
                 int ptr = 0;
@@ -658,7 +658,7 @@ namespace ScriptInterpreter
                 } while (ptr < raw.Length);
                 return sb.ToString();
             }
-            throw new ArgumentException("错误:不正确的字符串:"+src);
+            throw new ArgumentException("错误:不正确的字符串:" + src);
         }
         public static string escapeText(string src) {
             StringBuilder sb = new StringBuilder();
@@ -692,6 +692,104 @@ namespace ScriptInterpreter
             {
                 return description;
             }
+        }
+    }
+
+    internal class HttpUtility {
+
+
+        public static string UrlDecode(String input)
+        {
+            try
+            {
+                StringBuilder sb = new StringBuilder();
+                int ptr = 0;
+                do
+                {
+                    if (input[ptr] == '+')
+                    {
+                        sb.Append(" ");
+                    }
+                    else if (input[ptr] == '%')
+                    {
+                        List<byte> buffer = new List<byte>();
+                        while (ptr < input.Length && input[ptr] == '%')
+                        {
+                            string bytestr = input[ptr + 1].ToString() + input[ptr + 2].ToString();
+                            byte b = str2byte(bytestr);
+                            buffer.Add(b);
+                            ptr += 3;
+                        }
+                        sb.Append(Encoding.UTF8.GetString(buffer.ToArray()));
+                        ptr--;
+                    }
+                    else
+                    {
+                        sb.Append(input[ptr]);
+                    }
+                    ptr++;
+                } while (ptr < input.Length);
+                return sb.ToString();
+            }
+            catch (Exception ex)
+            {
+                throw new ArgumentException("无法解码输入内容：" + input);
+            }
+        }
+        static byte str2byte(string str)
+        {
+            str = "0x" + str.ToUpper();
+            return Convert.ToByte(str, 16);
+        }
+
+
+        public static string UrlEncode(string str)
+        {
+            StringBuilder sb = new StringBuilder();
+            char[] byStr = str.ToCharArray();
+            for (int i = 0; i < byStr.Length; i++)
+            {
+                if (IsSafe(byStr[i]))
+                {
+                    sb.Append(byStr[i]);
+                }
+                else
+                {
+                    byte[] bytes = Encoding.UTF8.GetBytes(byStr[i].ToString());
+                    foreach (byte b in bytes)
+                    {
+                        sb.Append("%").Append(byte2Hex(b));
+                    }
+                }
+            }
+            return (sb.ToString());
+        }
+
+        internal static string byte2Hex(byte b)
+        {
+            return b.ToString("X2");
+        }
+
+        internal static bool IsSafe(char chr)
+        {
+            char ch = chr;
+            if ((((ch >= 'a') && (ch <= 'z')) || ((ch >= 'A') && (ch <= 'Z'))) || ((ch >= '0') && (ch <= '9')))
+            {
+                return true;
+            }
+            switch (ch)
+            {
+                case '\'':
+                case '(':
+                case ')':
+                case '*':
+                case '-':
+                case '.':
+                case '_':
+                case '!':
+                    return true;
+            }
+            return false;
         }
     }
 }
