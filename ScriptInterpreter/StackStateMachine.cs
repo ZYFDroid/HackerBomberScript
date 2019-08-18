@@ -410,6 +410,13 @@ namespace ScriptInterpreter
 
     public static class InstructionUtils
     {
+        static Random mRandom = null;
+        static Random Rnd() {
+            if (null == mRandom) {
+                mRandom = new Random();
+            }
+            return mRandom;
+        }
         public static long GetTimestamp()
         {
             TimeSpan ts = DateTime.Now.ToUniversalTime() - new DateTime(1970, 1, 1);
@@ -418,7 +425,7 @@ namespace ScriptInterpreter
         public static string GenerateRandomSequence(string charpool, int minlen, int maxlen)
         {
             StringBuilder sb = new StringBuilder();
-            Random rnd = new Random();
+            Random rnd = Rnd();
             int len = minlen + (rnd.Next() % (maxlen - minlen + 1));
             for (int i = 0; i < len; i++)
             {
@@ -432,7 +439,7 @@ namespace ScriptInterpreter
         }
         public static string RandomPassword()
         {
-            return GenerateRandomSequence("1234567890qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM!@#￥%^&*()_+-=[];,./<>?:\"{}\\`~", 6, 12);
+            return GenerateRandomSequence("1234567890qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM!@#$%^&*()_+-=[];,./<>?:\"{}\\`~", 6, 12);
         }
         public static string Base64Encode(string input)
         {

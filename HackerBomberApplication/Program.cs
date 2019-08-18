@@ -1,8 +1,6 @@
 ﻿using System;
-using 专治骗子;
-using ScriptInterpreter;
-using System.Text;
-using System.IO;
+using System.Collections.Generic;
+using System.Threading;
 using HackerBomber;
 
 namespace HackerBomberApplication
@@ -11,7 +9,14 @@ namespace HackerBomberApplication
     {
         static void Main(string[] args)
         {
+            
+            ConsoleRunner.OutputHandler += ConsoleRunner_OutputHandler;
             ConsoleRunner.Run();
+        }
+        
+        private static void ConsoleRunner_OutputHandler(object sender, string e)
+        {
+            Console.WriteLine(e); 
         }
     }
 }

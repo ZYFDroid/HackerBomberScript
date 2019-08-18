@@ -36,7 +36,7 @@ namespace 专治骗子
             while (BomberThreads.Count < mThreadCount)
             {
                 Thread t = new Thread(run);
-                Thread.Sleep(100);
+                Thread.Sleep(1);
                 BomberThreads.Add(t);
                 t.Start();
             }
@@ -127,13 +127,28 @@ namespace 专治骗子
         }
         public static string GetHttpResponse(HttpWebRequest req) {
             string result = "";
-            HttpWebResponse resp = (HttpWebResponse)req.GetResponse();
-            Stream stream = resp.GetResponseStream();
-            using (StreamReader reader = new StreamReader(stream, Encoding.UTF8))
+            try
             {
-                result = reader.ReadToEnd();
+                HttpWebResponse resp = (HttpWebResponse)req.GetResponse();
+                Stream stream = resp.GetResponseStream();
+                using (StreamReader reader = new StreamReader(stream, Encoding.UTF8))
+                {
+                    result = reader.ReadToEnd();
+                }
+                return "[" + resp.StatusCode.ToString() + "] " + result;
             }
-            return "["+resp.StatusCode.ToString()+"] " + result;
+            catch (WebException ex) {
+                if (ex.Response == null) {
+                    throw ex;
+                }
+                if ((int)ex.Status < 400)
+                {
+                    return ex.Message;
+                }
+                else {
+                    throw ex;
+                }
+            }
         }
         public static string GenerateRandomSequence(string charpool, int minlen, int maxlen)
         {
