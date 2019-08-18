@@ -40,6 +40,7 @@ namespace ScriptInterpreter
         const string COMMAND_CLONE = "复读";//复制栈顶元素
         const string COMMAND_JOIN = "合并"; //从底到顶合并栈中的元素
         const string COMMAND_PRINT = "输出";//输出栈顶内容(不弹出),或者给定参数
+        const string COMMAND_PRINTAS = "输出为";//输出栈顶内容(不弹出),或者给定参数
         const string COMMAND_SWAP = "交换";//交换栈顶两个元素
 
         const string COMMAND_GEN = "生成";//生成命令,生成指定内容并插入栈,包含子命令
@@ -55,6 +56,7 @@ namespace ScriptInterpreter
             InstructionCollection.Add(COMMAND_SET, new CommandHost(HandleSet));
             InstructionCollection.Add(COMMAND_CLONE, new CommandHost(HandleClone));
             InstructionCollection.Add(COMMAND_PRINT, new CommandHost(HandlePrint));
+            InstructionCollection.Add(COMMAND_PRINTAS, new CommandHost(HandlePrintAs));
             InstructionCollection.Add(COMMAND_SWAP, new CommandHost(HandleSwap));
             InstructionCollection.Add(COMMAND_GEN, new CommandHost(HandleGen));
             InstructionCollection.Add(COMMAND_JOIN, new CommandHost(HandleJoin));
@@ -117,22 +119,19 @@ namespace ScriptInterpreter
         }
 
         #region 指令实现
-        [Description("将参数中的内容插入到笔记区中，例如：\r\n插入 \"http://nhml.xyz/index.php\"")]
+        [Description("将参数内容插入笔记区\r\n用法：\r\n插入 \"插入的内容\"")]
         public void HandlePush(StackStateMachine machine, Instruction instruction) {
             if (instruction.Args.Length < 1) { throw new ArgumentException(instruction.InstructionCode + " 命令需要参数"); }
             push(instruction.Args[0].Value);
         }
-
         public void HandlePop(StackStateMachine machine, Instruction instruction) {
             if (runtimeStack.Count < 1) { throw new InvalidOperationException(StackName + " 中是空的,删除失败"); }
             pop();
         }
-
         public void HandleGet(StackStateMachine machine, Instruction instruction) {
             if (instruction.Args.Length < 1) { throw new ArgumentException(instruction.InstructionCode + " 命令需要参数"); }
             push(get(instruction.Args[0].Value));
         }
-
         public void HandleSet(StackStateMachine machine, Instruction instruction) {
             if (instruction.Args.Length < 1) { throw new ArgumentException(instruction.InstructionCode + " 命令需要1-2个参数"); }
 
@@ -182,10 +181,19 @@ namespace ScriptInterpreter
             }
             else
             {
-                if (runtimeStack.Count < 2) { throw new ArgumentException(instruction.InstructionCode + " 需要 " + StackName + " 中有至少一个文本"); }
+                if (runtimeStack.Count < 1) { throw new ArgumentException(instruction.InstructionCode + " 需要 " + StackName + " 中有至少一个文本"); }
                 print(peek());
             }
         }
+
+
+        public void HandlePrintAs(StackStateMachine machine, Instruction instruction)
+        {
+            if (instruction.Args.Length < 1) { throw new ArgumentException(instruction.InstructionCode + " 命令需要1个参数"); }
+            if (runtimeStack.Count < 1) { throw new ArgumentException(instruction.InstructionCode + " 需要 " + StackName + " 中有至少一个文本"); }
+            print( instruction.Args[0].Value+"=" +peek());
+        }
+
 
         public void HandleSwap(StackStateMachine machine, Instruction instruction) {
             if (runtimeStack.Count < 2) { throw new ArgumentException(instruction.InstructionCode + " 需要 " + StackName + " 中有至少两个文本"); }

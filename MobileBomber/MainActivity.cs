@@ -29,7 +29,9 @@ namespace MobileBomber
             FindViewById<Button>(Resource.Id.btnStart).Click += MainActivity_Click;
             outputText = FindViewById<TextView>(Resource.Id.txtOutput);
             statisticText = FindViewById<TextView>(Resource.Id.txtStatus);
-            
+
+            FindViewById<EditText>(Resource.Id.txtScript).Text = GetSharedPreferences("main", Android.Content.FileCreationMode.Private).GetString("script", "");
+
             performer = null;
 
         }
@@ -39,6 +41,8 @@ namespace MobileBomber
             if (null == performer)
             {
                 String script = FindViewById<EditText>(Resource.Id.txtScript).Text;
+
+                GetSharedPreferences("main", Android.Content.FileCreationMode.Private).Edit().PutString("script", script).Commit();
 
                 int threadcount = 32;
 
@@ -50,6 +54,10 @@ namespace MobileBomber
                         int.TryParse(line.Replace("#线程数", "").Trim(), out threadcount);
                     }
                 }
+
+                System.Net.ServicePointManager.DefaultConnectionLimit = threadcount;
+                System.Net.ServicePointManager.Expect100Continue = false;
+
                 ScriptedBomber bomber = new ScriptedBomber(script);
                 performer = new BomberPerformer(bomber);
                 bomber.OnBomberComplete += Bomber_OnBomberComplete;

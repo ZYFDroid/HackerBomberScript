@@ -36,6 +36,9 @@
     <ApplicationIcon>icon.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="ICSharpCode.TextEditor, Version=3.2.1.6466, Culture=neutral, PublicKeyToken=4d61825e8dd49f1a, processorArchitecture=MSIL">
+      <HintPath>..\packages\ICSharpCode.TextEditor.3.2.1.6466\lib\Net20\ICSharpCode.TextEditor.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -55,10 +58,28 @@
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
+    <Compile Include="FrmBuildBomber.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FrmBuildBomber.Designer.cs">
+      <DependentUpon>FrmBuildBomber.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FrmTextEscape.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FrmTextEscape.Designer.cs">
+      <DependentUpon>FrmTextEscape.cs</DependentUpon>
+    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FrmBuildBomber.resx">
+      <DependentUpon>FrmBuildBomber.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FrmTextEscape.resx">
+      <DependentUpon>FrmTextEscape.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -70,6 +91,7 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
+    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -84,6 +106,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\HackerBomber\HackerBomber.csproj">
+      <Project>{cfd4c19b-3035-452d-ade7-d932fe311bbd}</Project>
+      <Name>HackerBomber</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ScriptInterpreter\ScriptInterpreter.csproj">
       <Project>{0e903726-2918-49f9-956c-a4f7deb8664e}</Project>
       <Name>ScriptInterpreter</Name>
