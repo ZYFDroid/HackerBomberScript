@@ -64,6 +64,12 @@
     <Compile Include="FrmBuildBomber.Designer.cs">
       <DependentUpon>FrmBuildBomber.cs</DependentUpon>
     </Compile>
+    <Compile Include="FrmDisplayText.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FrmDisplayText.Designer.cs">
+      <DependentUpon>FrmDisplayText.cs</DependentUpon>
+    </Compile>
     <Compile Include="FrmTextEscape.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -77,6 +83,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="FrmBuildBomber.resx">
       <DependentUpon>FrmBuildBomber.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FrmDisplayText.resx">
+      <DependentUpon>FrmDisplayText.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FrmTextEscape.resx">
       <DependentUpon>FrmTextEscape.cs</DependentUpon>
@@ -118,6 +127,7 @@
   <ItemGroup>
     <Content Include="icon.ico" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

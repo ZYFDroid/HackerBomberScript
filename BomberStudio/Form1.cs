@@ -300,5 +300,10 @@ namespace BomberStudio
             btnTestSend.Enabled = false;
             testSendWorker.RunWorkerAsync(machine);
         }
+
+        private void ToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            new FrmBuildBomber(txtCode.Text).ShowDialog();
+        }
     }
 }
