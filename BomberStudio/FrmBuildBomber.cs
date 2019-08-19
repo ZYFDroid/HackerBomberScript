@@ -79,7 +79,7 @@ namespace BomberStudio
 				if (!Directory.Exists(root)) {
 					Directory.CreateDirectory(root);
 				} else {
-					DialogResult willContinue = MessageBox.Show("文件夹 " + root + "已存在，覆盖吗？", this.Text, MessageBoxButtons.YesNo);
+					DialogResult willContinue = MessageBox.Show("文件夹 " + root + " 已存在，覆盖吗？", this.Text, MessageBoxButtons.YesNo);
 					if (willContinue != DialogResult.Yes){
 						return;
 					}
