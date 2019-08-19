@@ -119,19 +119,24 @@ namespace ScriptInterpreter
         }
 
         #region 指令实现
-        [Description("将参数内容插入笔记区\r\n用法：\r\n插入 \"插入的内容\"")]
+        [Description("效果：将参数内容插入笔记区\r\n用法：\r\n插入 \"插入的内容\"\r\n你可以随意插入几条内容，然后运行程序观察笔记区的变化")]
         public void HandlePush(StackStateMachine machine, Instruction instruction) {
             if (instruction.Args.Length < 1) { throw new ArgumentException(instruction.InstructionCode + " 命令需要参数"); }
             push(instruction.Args[0].Value);
         }
+        [Description("效果：删除笔记去最后一条文本\r\n用法：直接用\r\n你可以先随意插入几条内容，然后使用删除命令，运行程序观察笔记区的变化")]
         public void HandlePop(StackStateMachine machine, Instruction instruction) {
             if (runtimeStack.Count < 1) { throw new InvalidOperationException(StackName + " 中是空的,删除失败"); }
             pop();
         }
+        [Description("效果：从表格中获取指定条目内容，然后插入到笔记区中\r\n例：假如表格中有以下内容：\r\n\r\n提交方法：\"GET\"\r\n\r\n执行 获取 提交方法\r\n\r\n将会插入 \"GET\"")]
         public void HandleGet(StackStateMachine machine, Instruction instruction) {
             if (instruction.Args.Length < 1) { throw new ArgumentException(instruction.InstructionCode + " 命令需要参数"); }
             push(get(instruction.Args[0].Value));
         }
+
+
+        [Description("效果：将笔记区最新一条内容放进表格里去\r\n例：\r\n假如笔记区中有一条\"GET\"\r\n执行 设为 提交方法\r\n即可向表格中插入\r\n提交方法：\"GET\"\r\n\r\n一般用法是\r\n插入 值\r\n设为 名称\r\n\r\n要轰炸盗号骗子，你需要在表格中填入以下内容\r\n提交URL 提交方法 提交内容")]
         public void HandleSet(StackStateMachine machine, Instruction instruction) {
             if (instruction.Args.Length < 1) { throw new ArgumentException(instruction.InstructionCode + " 命令需要1-2个参数"); }
 
@@ -146,10 +151,12 @@ namespace ScriptInterpreter
             }
         }
 
+        [Description("效果：删光笔记区\r\n用法：直接用")]
         public void HandleClear(StackStateMachine machine, Instruction instruction) {
             runtimeStack.Clear();
         }
 
+        [Description("效果：将笔记区每一条文本拼在一起\r\n用法：直接用\r\n\r\n小贴士：\r\n提交内容一般需要好几段文本拼合而成，使用 插入 和 生成 命令生成内容，最后 合并 成一条文本，设为 提交内容")]
         public void HandleJoin(StackStateMachine machine, Instruction instruction) {
             StringBuilder sb = new StringBuilder();
             foreach (string s in runtimeStack)
@@ -160,6 +167,7 @@ namespace ScriptInterpreter
             push(sb.ToString());
         }
 
+        [Description("效果：输出文字\r\n用法：\r\n1.不加参数：\r\n直接使用 输出，笔记区最后一条内容将会被显示出来\r\n2.加参数\r\n参数会被显示出来\r\n具体可以自行尝试")]
         public void HandlePrint(StackStateMachine machine, Instruction instruction) {
             if (instruction.Args.Length > 0)
             {
@@ -187,14 +195,16 @@ namespace ScriptInterpreter
         }
 
 
+        [Description("效果：显示出笔记区最后一条内容，并在前面加个名字\r\n用法： 输出为 名称\r\n\r\n例：\r\n\r\n生成 QQ\r\n输出为 QQ\r\n\r\n将会输出：QQ=xxxxxx（生成的内容）")]
         public void HandlePrintAs(StackStateMachine machine, Instruction instruction)
         {
             if (instruction.Args.Length < 1) { throw new ArgumentException(instruction.InstructionCode + " 命令需要1个参数"); }
             if (runtimeStack.Count < 1) { throw new ArgumentException(instruction.InstructionCode + " 需要 " + StackName + " 中有至少一个文本"); }
-            print( instruction.Args[0].Value+"=" +peek());
+            print( instruction.Args[0].Value+"=" +peek()+"\r\n");
         }
 
 
+        [Description("效果：交换笔记区最后两条内容\r\n用法：直接用\r\n\r\n有的时候会用到")]
         public void HandleSwap(StackStateMachine machine, Instruction instruction) {
             if (runtimeStack.Count < 2) { throw new ArgumentException(instruction.InstructionCode + " 需要 " + StackName + " 中有至少两个文本"); }
             string bottom = pop();
@@ -203,6 +213,7 @@ namespace ScriptInterpreter
             push(top);
         }
 
+        [Description("效果：将笔记区最新一条内容按要求编码\r\n例：\r\n编码为 MD5\r\n编码为 URL\r\n编码为 BASE64\r\n\r\n小贴士：\r\n密码生成完成之后建议编码为URL")]
         public void HandleEncode(StackStateMachine machine, Instruction instruction) {
             if (instruction.Args.Length < 1) { throw new ArgumentException(instruction.InstructionCode + " 命令需要参数"); }
             if (runtimeStack.Count < 1)
@@ -212,6 +223,7 @@ namespace ScriptInterpreter
             encode(instruction.Args);
         }
 
+        [Description("效果：将笔记区最新一条内容按要求解码\r\n例：\r\n解码为 URL\r\n解码为 BASE64\r\n\r\n一般轰炸的时候用不到，但你可以用这个对编码过的内容解码，看看解码后是什么东西")]
         public void HandleDecode(StackStateMachine machine, Instruction instruction) {
             if (instruction.Args.Length < 1) { throw new ArgumentException(instruction.InstructionCode + " 命令需要参数"); }
             if (runtimeStack.Count < 1)
@@ -221,13 +233,17 @@ namespace ScriptInterpreter
             decode(instruction.Args);
         }
         GenerateHelper generateHelper = new GenerateHelper();
+
+        [Description("效果：生成指定内容并插入笔记区\r\n能够生成的东西：\r\n生成 QQ\r\n生成 密码\r\n生成 时间戳\r\n\r\n以后可能会生成更多东西，例如骚话（划去）")]
         public void HandleGen(StackStateMachine machine, Instruction instruction) {
             if (instruction.Args.Length < 1) { throw new ArgumentException(instruction.InstructionCode + " 命令需要参数"); }
             generateHelper.InvokeGenerate(machine, instruction);
         }
 
+        [Description("效果：重复笔记区最后一条文本\r\n用法：直接用\r\n\r\n例：\r\n假如笔记区有一条\"人类的本质是\"\r\n执行这个命令，你将会获得两条\"人类的本质是\"")]
         public void HandleClone(StackStateMachine machine, Instruction instruction) {
             if (runtimeStack.Count < 1) { throw new InvalidOperationException(instruction.InstructionCode + " 命令要求 " + StackName + " 中至少有一条文本"); }
+            push(peek());
         }
 
         #endregion
@@ -447,7 +463,7 @@ namespace ScriptInterpreter
         }
         public static string RandomPassword()
         {
-            return GenerateRandomSequence("1234567890qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM!@#$%^&*()_+-=[];,./<>?:\"{}\\`~", 6, 12);
+            return GenerateRandomSequence("1234567890123456789012345678901234567890qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM1234567890qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM!@#$%^&*()_+-=[];,./<>?:{}~", 6, 12);
         }
         public static string Base64Encode(string input)
         {
