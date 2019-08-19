@@ -261,6 +261,7 @@
             this.txtCommandDesc.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.txtCommandDesc.Size = new System.Drawing.Size(191, 132);
             this.txtCommandDesc.TabIndex = 5;
+			this.txtCommandDesc.ReadOnly = true;
             // 
             // listAvailableCommands
             // 
