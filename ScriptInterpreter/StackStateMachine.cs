@@ -660,6 +660,7 @@ namespace ScriptInterpreter
         public static string unescapeText(string src) {
             if (src.StartsWith("\"") && src.EndsWith("\"") && src.Length >= 2) {
                 string raw = src.Substring(1, src.Length - 2);
+                if (raw.Length <= 0) { return raw; }
                 StringBuilder sb = new StringBuilder();
                 int ptr = 0;
                 do
