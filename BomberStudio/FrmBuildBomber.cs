@@ -76,8 +76,8 @@ namespace BomberStudio
 			} else if (folderBrowserDialog1.ShowDialog() == DialogResult.OK) {
 				string root = folderBrowserDialog1.SelectedPath;
 				root = Path.Combine(root, "轰炸机");
-				if (!File.Exists(root)) {
-					System.IO.Directory.CreateDirectory(root);
+				if (!Directory.Exists(root)) {
+					Directory.CreateDirectory(root);
 				} else {
 					DialogResult willContinue = MessageBox.Show("文件夹 " + root + "已存在，覆盖吗？", this.Text, MessageBoxButtons.YesNo);
 					if (willContinue != DialogResult.Yes){
