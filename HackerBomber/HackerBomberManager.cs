@@ -60,6 +60,8 @@ namespace 专治骗子
     public static class BomberUtils
     {
 
+        public static bool showEcho = true;
+
         public static string useragent = "Mozilla/5.0 (Linux; Android 9; PH-1 Build/PPR1.180610.091; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/66.0.3359.126 MQQBrowser/6.2 TBS/044807 Mobile Safari/537.36 V1_AND_SQ_8.0.8_1218_YYB_D QQ/8.0.8.4115 NetType/WIFI WebP/0.3.0 Pixel/1312 StatusBarHeight/151";
 
         public static event EventHandler<HttpRequestCreatedEventArgs> BeforeRequestSend;
@@ -133,7 +135,13 @@ namespace 专治骗子
                 Stream stream = resp.GetResponseStream();
                 using (StreamReader reader = new StreamReader(stream, Encoding.UTF8))
                 {
-                    result = reader.ReadToEnd();
+                    if (showEcho)
+                    {
+                        result = reader.ReadToEnd();
+                    }
+                    else {
+                        result = "";
+                    }
                 }
                 try
                 {

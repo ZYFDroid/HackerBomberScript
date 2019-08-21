@@ -54,6 +54,40 @@ namespace BomberStudio
             prefix = " - " + Application.ProductName + " " + Application.ProductVersion;
             updateTitle();
             machine.OnProgramPrint += Machine_OnProgramPrint;
+
+            loadPlugins();
+
+            new FrmSplash().ShowDialog();
+        }
+
+        public void loadPlugins() {
+            List<string> toolset = new List<string>();
+            if (Directory.Exists("tools")) {
+                foreach (string path in Directory.EnumerateDirectories("tools")) {
+                    if (File.Exists(Path.Combine(path, "index.exe"))) {
+                        toolset.Add(Path.GetFileName(path));
+                    }
+                }
+
+                if (toolset.Count > 0) {
+                    toolPlugins.DropDownItems.Add(new ToolStripSeparator());
+                    foreach (string s in toolset) {
+                        ToolStripMenuItem plugin = new ToolStripMenuItem(s);
+                        plugin.Click += Plugin_Click;
+                        toolPlugins.DropDownItems.Add(plugin);
+                    }
+                }
+            }
+        }
+
+        private void Plugin_Click(object sender, EventArgs e)
+        {
+            string text = ((ToolStripMenuItem)sender).Text;
+            try
+            {
+                Process.Start("tools\\" + text + "\\index.exe");
+            }
+            catch { }
         }
 
         private void Machine_OnProgramPrint(object sender, string e)
@@ -196,12 +230,15 @@ namespace BomberStudio
                 {
                     listCommands.Items.Add(inst.ToString());
                 }
-                int ptr = machine.ProgramCounter;
-                if (ptr >= machine.instructions.Count)
+                int ptr = machine.ProgramCounter-1;
+                if (ptr <0 )
                 {
-                    ptr = machine.instructions.Count - 1;
+                    ptr = 0;
                 }
-                listCommands.Items[ptr].BackColor = Color.YellowGreen;
+                else {
+
+                    listCommands.Items[ptr].BackColor = Color.YellowGreen;
+                }
                 listCommands.Items[ptr].EnsureVisible();
             }
 
@@ -213,7 +250,7 @@ namespace BomberStudio
             listStack.Items.Clear();
             foreach (string stack in machine.runtimeStack)
             {
-                listStack.Items.Add(stack);
+                listStack.Items.Add(TextUtil.escapeText(stack));
             }
 
         }
@@ -302,6 +339,11 @@ namespace BomberStudio
         }
 
         private void ToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            new FrmBuildBomber(txtCode.Text).ShowDialog();
+        }
+
+        private void Button3_Click(object sender, EventArgs e)
         {
             new FrmBuildBomber(txtCode.Text).ShowDialog();
         }

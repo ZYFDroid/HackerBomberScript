@@ -53,6 +53,10 @@ namespace MobileBomber
                     {
                         int.TryParse(line.Replace("#线程数", "").Trim(), out threadcount);
                     }
+                    if (line.Trim().StartsWith("#关闭回显"))
+                    {
+                        BomberUtils.showEcho = false;
+                    }
                 }
 
                 System.Net.ServicePointManager.DefaultConnectionLimit = threadcount;

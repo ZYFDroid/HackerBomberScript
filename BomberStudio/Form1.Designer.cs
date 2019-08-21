@@ -35,10 +35,10 @@
             this.保存ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.另存为ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
-            this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuGenerateBomber = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.退出ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolPlugins = new System.Windows.Forms.ToolStripMenuItem();
             this.文本转义ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.帮助ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.关于ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -53,6 +53,7 @@
             this.button5 = new System.Windows.Forms.Button();
             this.txtCode = new ICSharpCode.TextEditor.TextEditorControl();
             this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.button3 = new System.Windows.Forms.Button();
             this.btnTestSend = new System.Windows.Forms.Button();
             this.button4 = new System.Windows.Forms.Button();
             this.button2 = new System.Windows.Forms.Button();
@@ -101,11 +102,11 @@
             // 
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.文件ToolStripMenuItem,
-            this.toolStripMenuItem2,
+            this.toolPlugins,
             this.帮助ToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(643, 25);
+            this.menuStrip1.Size = new System.Drawing.Size(692, 25);
             this.menuStrip1.TabIndex = 0;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -117,7 +118,7 @@
             this.保存ToolStripMenuItem,
             this.另存为ToolStripMenuItem,
             this.toolStripSeparator2,
-            this.toolStripMenuItem1,
+            this.mnuGenerateBomber,
             this.toolStripSeparator1,
             this.退出ToolStripMenuItem});
             this.文件ToolStripMenuItem.Name = "文件ToolStripMenuItem";
@@ -127,62 +128,62 @@
             // toolStripMenuItem3
             // 
             this.toolStripMenuItem3.Name = "toolStripMenuItem3";
-            this.toolStripMenuItem3.Size = new System.Drawing.Size(180, 22);
+            this.toolStripMenuItem3.Size = new System.Drawing.Size(136, 22);
             this.toolStripMenuItem3.Text = "新建";
             this.toolStripMenuItem3.Click += new System.EventHandler(this.ToolStripMenuItem3_Click);
             // 
             // 打开ToolStripMenuItem
             // 
             this.打开ToolStripMenuItem.Name = "打开ToolStripMenuItem";
-            this.打开ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.打开ToolStripMenuItem.Size = new System.Drawing.Size(136, 22);
             this.打开ToolStripMenuItem.Text = "打开";
             this.打开ToolStripMenuItem.Click += new System.EventHandler(this.打开ToolStripMenuItem_Click);
             // 
             // 保存ToolStripMenuItem
             // 
             this.保存ToolStripMenuItem.Name = "保存ToolStripMenuItem";
-            this.保存ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.保存ToolStripMenuItem.Size = new System.Drawing.Size(136, 22);
             this.保存ToolStripMenuItem.Text = "保存";
             this.保存ToolStripMenuItem.Click += new System.EventHandler(this.保存ToolStripMenuItem_Click);
             // 
             // 另存为ToolStripMenuItem
             // 
             this.另存为ToolStripMenuItem.Name = "另存为ToolStripMenuItem";
-            this.另存为ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.另存为ToolStripMenuItem.Size = new System.Drawing.Size(136, 22);
             this.另存为ToolStripMenuItem.Text = "另存为";
             this.另存为ToolStripMenuItem.Click += new System.EventHandler(this.另存为ToolStripMenuItem_Click);
             // 
             // toolStripSeparator2
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(177, 6);
+            this.toolStripSeparator2.Size = new System.Drawing.Size(133, 6);
             // 
-            // toolStripMenuItem1
+            // mnuGenerateBomber
             // 
-            this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-            this.toolStripMenuItem1.Size = new System.Drawing.Size(180, 22);
-            this.toolStripMenuItem1.Text = "生成轰炸机";
-            this.toolStripMenuItem1.Click += new System.EventHandler(this.ToolStripMenuItem1_Click);
+            this.mnuGenerateBomber.Name = "mnuGenerateBomber";
+            this.mnuGenerateBomber.Size = new System.Drawing.Size(136, 22);
+            this.mnuGenerateBomber.Text = "生成轰炸机";
+            this.mnuGenerateBomber.Click += new System.EventHandler(this.ToolStripMenuItem1_Click);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(177, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(133, 6);
             // 
             // 退出ToolStripMenuItem
             // 
             this.退出ToolStripMenuItem.Name = "退出ToolStripMenuItem";
-            this.退出ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.退出ToolStripMenuItem.Size = new System.Drawing.Size(136, 22);
             this.退出ToolStripMenuItem.Text = "退出";
             this.退出ToolStripMenuItem.Click += new System.EventHandler(this.退出ToolStripMenuItem_Click);
             // 
-            // toolStripMenuItem2
+            // toolPlugins
             // 
-            this.toolStripMenuItem2.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolPlugins.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.文本转义ToolStripMenuItem});
-            this.toolStripMenuItem2.Name = "toolStripMenuItem2";
-            this.toolStripMenuItem2.Size = new System.Drawing.Size(44, 21);
-            this.toolStripMenuItem2.Text = "工具";
+            this.toolPlugins.Name = "toolPlugins";
+            this.toolPlugins.Size = new System.Drawing.Size(44, 21);
+            this.toolPlugins.Text = "工具";
             // 
             // 文本转义ToolStripMenuItem
             // 
@@ -216,7 +217,7 @@
             this.tabControl1.Location = new System.Drawing.Point(12, 28);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(619, 373);
+            this.tabControl1.Size = new System.Drawing.Size(668, 444);
             this.tabControl1.TabIndex = 1;
             // 
             // tabPage1
@@ -225,7 +226,7 @@
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(611, 347);
+            this.tabPage1.Size = new System.Drawing.Size(660, 418);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "编辑";
             this.tabPage1.UseVisualStyleBackColor = true;
@@ -247,19 +248,19 @@
             this.splitContainer3.Panel2.Controls.Add(this.button6);
             this.splitContainer3.Panel2.Controls.Add(this.button5);
             this.splitContainer3.Panel2.Controls.Add(this.txtCode);
-            this.splitContainer3.Size = new System.Drawing.Size(605, 341);
-            this.splitContainer3.SplitterDistance = 201;
+            this.splitContainer3.Size = new System.Drawing.Size(654, 412);
+            this.splitContainer3.SplitterDistance = 217;
             this.splitContainer3.TabIndex = 0;
             // 
             // txtCommandDesc
             // 
             this.txtCommandDesc.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtCommandDesc.Location = new System.Drawing.Point(3, 202);
+            this.txtCommandDesc.Location = new System.Drawing.Point(3, 273);
             this.txtCommandDesc.Multiline = true;
             this.txtCommandDesc.Name = "txtCommandDesc";
             this.txtCommandDesc.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.txtCommandDesc.Size = new System.Drawing.Size(191, 132);
+            this.txtCommandDesc.Size = new System.Drawing.Size(207, 132);
             this.txtCommandDesc.TabIndex = 5;
             // 
             // listAvailableCommands
@@ -278,7 +279,7 @@
             this.listAvailableCommands.Location = new System.Drawing.Point(3, 3);
             this.listAvailableCommands.MultiSelect = false;
             this.listAvailableCommands.Name = "listAvailableCommands";
-            this.listAvailableCommands.Size = new System.Drawing.Size(191, 193);
+            this.listAvailableCommands.Size = new System.Drawing.Size(207, 264);
             this.listAvailableCommands.TabIndex = 4;
             this.listAvailableCommands.UseCompatibleStateImageBehavior = false;
             this.listAvailableCommands.View = System.Windows.Forms.View.Details;
@@ -324,12 +325,13 @@
             this.txtCode.Location = new System.Drawing.Point(3, 25);
             this.txtCode.Name = "txtCode";
             this.txtCode.ShowVRuler = false;
-            this.txtCode.Size = new System.Drawing.Size(390, 309);
+            this.txtCode.Size = new System.Drawing.Size(423, 380);
             this.txtCode.TabIndex = 0;
             this.txtCode.TextChanged += new System.EventHandler(this.TxtCode_TextChanged);
             // 
             // tabPage2
             // 
+            this.tabPage2.Controls.Add(this.button3);
             this.tabPage2.Controls.Add(this.btnTestSend);
             this.tabPage2.Controls.Add(this.button4);
             this.tabPage2.Controls.Add(this.button2);
@@ -342,6 +344,16 @@
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "运行";
             this.tabPage2.UseVisualStyleBackColor = true;
+            // 
+            // button3
+            // 
+            this.button3.Location = new System.Drawing.Point(330, 6);
+            this.button3.Name = "button3";
+            this.button3.Size = new System.Drawing.Size(75, 23);
+            this.button3.TabIndex = 3;
+            this.button3.Text = "生成轰炸机";
+            this.button3.UseVisualStyleBackColor = true;
+            this.button3.Click += new System.EventHandler(this.Button3_Click);
             // 
             // btnTestSend
             // 
@@ -593,10 +605,11 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(643, 413);
+            this.ClientSize = new System.Drawing.Size(692, 484);
             this.Controls.Add(this.tabControl1);
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
+            this.MinimumSize = new System.Drawing.Size(600, 400);
             this.Name = "Form1";
             this.Text = "无标题 - BomberStudio V1.0.0.0";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
@@ -640,7 +653,7 @@
         private System.Windows.Forms.ToolStripMenuItem 保存ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem 另存为ToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
-        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem mnuGenerateBomber;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripMenuItem 退出ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem 帮助ToolStripMenuItem;
@@ -654,7 +667,7 @@
         private System.Windows.Forms.Button button4;
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem2;
+        private System.Windows.Forms.ToolStripMenuItem toolPlugins;
         private System.Windows.Forms.ListView listRegister;
         private System.Windows.Forms.ColumnHeader columnHeader1;
         private System.Windows.Forms.ColumnHeader columnHeader2;
@@ -681,6 +694,7 @@
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
         private System.Windows.Forms.SaveFileDialog saveFileDialog1;
         private System.ComponentModel.BackgroundWorker testSendWorker;
+        private System.Windows.Forms.Button button3;
     }
 }
 

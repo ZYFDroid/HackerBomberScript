@@ -35,7 +35,7 @@
             this.chkUseRGB = new System.Windows.Forms.CheckBox();
             this.button1 = new System.Windows.Forms.Button();
             this.numThreadCount = new System.Windows.Forms.NumericUpDown();
-            this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
+            this.chkHideEcho = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.numThreadCount)).BeginInit();
             this.SuspendLayout();
             // 
@@ -61,10 +61,6 @@
             // 
             this.cmbType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbType.FormattingEnabled = true;
-            this.cmbType.Items.AddRange(new object[] {
-            "Windows程序",
-            "跨平台程序",
-            "Android程序"});
             this.cmbType.Location = new System.Drawing.Point(84, 19);
             this.cmbType.Name = "cmbType";
             this.cmbType.Size = new System.Drawing.Size(207, 20);
@@ -81,7 +77,7 @@
             // chkUseRGB
             // 
             this.chkUseRGB.AutoSize = true;
-            this.chkUseRGB.Location = new System.Drawing.Point(86, 124);
+            this.chkUseRGB.Location = new System.Drawing.Point(84, 105);
             this.chkUseRGB.Name = "chkUseRGB";
             this.chkUseRGB.Size = new System.Drawing.Size(90, 16);
             this.chkUseRGB.TabIndex = 5;
@@ -102,7 +98,7 @@
             // 
             this.numThreadCount.Location = new System.Drawing.Point(84, 50);
             this.numThreadCount.Maximum = new decimal(new int[] {
-            1024,
+            512,
             0,
             0,
             0});
@@ -121,6 +117,16 @@
             0});
             this.numThreadCount.ValueChanged += new System.EventHandler(this.NumericUpDown1_ValueChanged);
             // 
+            // chkHideEcho
+            // 
+            this.chkHideEcho.AutoSize = true;
+            this.chkHideEcho.Location = new System.Drawing.Point(84, 124);
+            this.chkHideEcho.Name = "chkHideEcho";
+            this.chkHideEcho.Size = new System.Drawing.Size(192, 16);
+            this.chkHideEcho.TabIndex = 5;
+            this.chkHideEcho.Text = "关闭对面发来的信息(提高速度)";
+            this.chkHideEcho.UseVisualStyleBackColor = true;
+            // 
             // FrmBuildBomber
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -128,6 +134,7 @@
             this.ClientSize = new System.Drawing.Size(314, 207);
             this.Controls.Add(this.numThreadCount);
             this.Controls.Add(this.button1);
+            this.Controls.Add(this.chkHideEcho);
             this.Controls.Add(this.chkUseRGB);
             this.Controls.Add(this.lblComment);
             this.Controls.Add(this.cmbType);
@@ -154,6 +161,6 @@
         private System.Windows.Forms.CheckBox chkUseRGB;
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.NumericUpDown numThreadCount;
-        private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog1;
+        private System.Windows.Forms.CheckBox chkHideEcho;
     }
 }

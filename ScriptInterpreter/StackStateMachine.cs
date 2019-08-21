@@ -42,6 +42,7 @@ namespace ScriptInterpreter
         const string COMMAND_PRINT = "输出";//输出栈顶内容(不弹出),或者给定参数
         const string COMMAND_PRINTAS = "输出为";//输出栈顶内容(不弹出),或者给定参数
         const string COMMAND_SWAP = "交换";//交换栈顶两个元素
+        const string COMMAND_RANDOM = "随机选择";
 
         const string COMMAND_GEN = "生成";//生成命令,生成指定内容并插入栈,包含子命令
         const string COMMAND_CODEC_ENCODE = "编码为";//编码命令,编码栈顶文本,包含子命令
@@ -58,11 +59,11 @@ namespace ScriptInterpreter
             InstructionCollection.Add(COMMAND_PRINT, new CommandHost(HandlePrint));
             InstructionCollection.Add(COMMAND_PRINTAS, new CommandHost(HandlePrintAs));
             InstructionCollection.Add(COMMAND_SWAP, new CommandHost(HandleSwap));
+            InstructionCollection.Add(COMMAND_RANDOM, new CommandHost(HandleRandom));
             InstructionCollection.Add(COMMAND_GEN, new CommandHost(HandleGen));
             InstructionCollection.Add(COMMAND_JOIN, new CommandHost(HandleJoin));
             InstructionCollection.Add(COMMAND_CODEC_ENCODE, new CommandHost(HandleEncode));
             InstructionCollection.Add(COMMAND_CODEC_DECODE, new CommandHost(HandleDecode));
-
         }
 
         public void Compile(string code) {
@@ -119,10 +120,19 @@ namespace ScriptInterpreter
         }
 
         #region 指令实现
-        [Description("效果：将参数内容插入笔记区\r\n用法：\r\n插入 \"插入的内容\"\r\n你可以随意插入几条内容，然后运行程序观察笔记区的变化")]
+        [Description("效果：将参数内容插入笔记区\r\n用法：\r\n插入 \"插入的内容\"\r\n你可以随意插入几条内容，然后运行程序观察笔记区的变化\r\n\r\n插入 也可以同样插入表格中的内容\r\n\r\n例如 插入 提交URL（不加引号）")]
         public void HandlePush(StackStateMachine machine, Instruction instruction) {
             if (instruction.Args.Length < 1) { throw new ArgumentException(instruction.InstructionCode + " 命令需要参数"); }
-            push(instruction.Args[0].Value);
+
+            if (instruction.Args[0].ArgType == ArgType.ENUM)
+            {
+                if (runtimeRegister.ContainsKey(instruction.Args[0].Value)) {
+                    HandleGet(machine, instruction);
+                }
+            }
+            else {
+                push(instruction.Args[0].Value);
+            }
         }
         [Description("效果：删除笔记去最后一条文本\r\n用法：直接用\r\n你可以先随意插入几条内容，然后使用删除命令，运行程序观察笔记区的变化")]
         public void HandlePop(StackStateMachine machine, Instruction instruction) {
@@ -244,6 +254,13 @@ namespace ScriptInterpreter
         public void HandleClone(StackStateMachine machine, Instruction instruction) {
             if (runtimeStack.Count < 1) { throw new InvalidOperationException(instruction.InstructionCode + " 命令要求 " + StackName + " 中至少有一条文本"); }
             push(peek());
+        }
+
+        [Description("效果：当笔记区有几条内容的时候，随机选择某一条并插入笔记区\r\n比如：\r\n\r\n插入 \"A\"\r\n插入 \"B\"\r\n插入 \"C\"\r\n插入 \"D\"\r\n随机选择\r\n输出\r\n\r\n这样你就可以愉快地做选择题了")]
+        public void HandleRandom(StackStateMachine machine, Instruction instruction) {
+            if (runtimeStack.Count < 1) { throw new InvalidOperationException(StackName + " 中是空的,不能随机选择"); }
+            int chosen= InstructionUtils.Rnd().Next() % runtimeStack.Count();
+            push(runtimeStack[chosen]);
         }
 
         #endregion
@@ -435,7 +452,7 @@ namespace ScriptInterpreter
     public static class InstructionUtils
     {
         static Random mRandom = null;
-        static Random Rnd() {
+        public static Random Rnd() {
             if (null == mRandom) {
                 mRandom = new Random();
             }

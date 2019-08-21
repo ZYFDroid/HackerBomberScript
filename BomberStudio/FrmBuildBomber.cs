@@ -23,13 +23,16 @@ namespace BomberStudio
 
         private void FrmBuildBomber_Load(object sender, EventArgs e)
         {
-            cmbType.SelectedIndex = 0;
+            foreach (string path in Directory.EnumerateDirectories("template")) {
+                cmbType.Items.Add(Path.GetFileName(path));
+            }
+            try
+            {
+                cmbType.SelectedIndex = 0;
+            }
+            catch { }
         }
 
-        private void ValThreadCount_Scroll(object sender, EventArgs e)
-        {
-
-        }
 
         private void NumericUpDown1_ValueChanged(object sender, EventArgs e)
         {
@@ -63,43 +66,35 @@ namespace BomberStudio
 
         private void Button1_Click(object sender, EventArgs e)
         {
-            if (chkUseRGB.Checked) {
-                script="#开启RGB\r\n" + script;
-            }
-
-            script = "#线程数 "+numThreadCount.Value+"\r\n" + script;
-
-            if (cmbType.SelectedIndex == 0) {
-                if (folderBrowserDialog1.ShowDialog() == DialogResult.OK) {
-                    string root = folderBrowserDialog1.SelectedPath;
-                    root = Path.Combine(root, "轰炸机");
-                    CopyDirectory("template\\windows", root, true);
-                    File.WriteAllText(Path.Combine(root, "script.hbs"), script);
-                    Process.Start("explorer", "\""+root+"\"");
-                    Close();
-                }
-            }
-
-            if (cmbType.SelectedIndex == 1)
+            try
             {
-                if (folderBrowserDialog1.ShowDialog() == DialogResult.OK)
+                string root2 = "output";
+
+                string root = root2;
+
+                root = Path.Combine(root, "轰炸机_"+DateTime.Now.ToString("yyyyMMdd\\_HHmmss"));
+
+                if (chkUseRGB.Checked)
                 {
-                    string root = folderBrowserDialog1.SelectedPath;
-                    root = Path.Combine(root, "轰炸机");
-                    CopyDirectory("template\\linux", root, true);
-                    File.WriteAllText(Path.Combine(root, "script.hbs"), script);
-                    Process.Start("explorer", "\"" + root + "\"");
-                    Close();
+                    script = "#开启RGB\r\n" + script;
                 }
-            }
 
-            if (cmbType.SelectedIndex == 2)
-            {
-                script = "#复制这段内容，粘贴到安卓轰炸机里，即可开始轰炸\r\n" + script;
-                new FrmDisplayText(script).Show();
+                if (chkUseRGB.Checked)
+                {
+                    script = "#关闭回显\r\n" + script;
+                }
+
+                script = "#线程数 " + numThreadCount.Value + "\r\n" + script;
+
+                
+                CopyDirectory("template\\" + cmbType.Text, root, true);
+                File.WriteAllText(Path.Combine(root, "script.hbs"), script);
+                Process.Start("explorer", "\"" + root + "\"");
                 Close();
             }
-
+            catch (Exception ex) {
+                MessageBox.Show("轰炸机生成失败，原因："+ex.Message, "生成失败");
+            }
         }
 
 
