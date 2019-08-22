@@ -23,12 +23,21 @@ namespace HackerBomberGUI
         private void Form1_Load(object sender, EventArgs e)
         {
             Run();
+            money = threadCount * 2000;
+            lblSock.Text = "持有资金:" + money + " 持有股票:" + stock;
+
+            if (File.Exists("stock.dat"))
+            {
+                monitorChart1.StockMode = true;
+            }
+            else {
+                monitorChart1.StockMode = false;
+                Size size = this.ClientSize;
+                size.Height = groupBox2.Top;
+                this.ClientSize = size;
+            }
+
         }
-
-
-
-
-
 
         static string script = "";
 
@@ -103,7 +112,7 @@ namespace HackerBomberGUI
                 sb.AppendLine("" + "成功：" + successcount + " 失败：" + failcount + " 平均速度：" + speed + "/分钟");
                 try
                 {
-                    Invoke(resultHandler, speed, sb.ToString());
+                    BeginInvoke(resultHandler, speed, sb.ToString());
                 }
                 catch { }
             }
@@ -119,6 +128,30 @@ namespace HackerBomberGUI
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
             Process.GetCurrentProcess().Kill();
+        }
+
+        int money = 10000;
+        int stock = 0;
+
+        private void Button1_Click(object sender, EventArgs e)
+        {
+            int price = (int)monitorChart1.Value;
+            if (money > price) {
+                money -= price;
+                stock++;
+            }
+            lblSock.Text = "持有资金:" + money + " 持有股票:" + stock;
+
+        }
+
+        private void Button2_Click(object sender, EventArgs e)
+        {
+            int price = (int)monitorChart1.Value;
+            if (stock > 0) {
+                stock--;
+                money += price;
+            }
+            lblSock.Text = "持有资金:" + money + " 持有股票:" + stock;
         }
     }
 }

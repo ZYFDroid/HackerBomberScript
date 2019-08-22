@@ -106,7 +106,7 @@
             this.帮助ToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(692, 25);
+            this.menuStrip1.Size = new System.Drawing.Size(709, 25);
             this.menuStrip1.TabIndex = 0;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -217,7 +217,7 @@
             this.tabControl1.Location = new System.Drawing.Point(12, 28);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(668, 444);
+            this.tabControl1.Size = new System.Drawing.Size(685, 461);
             this.tabControl1.TabIndex = 1;
             // 
             // tabPage1
@@ -226,7 +226,7 @@
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(660, 418);
+            this.tabPage1.Size = new System.Drawing.Size(677, 435);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "编辑";
             this.tabPage1.UseVisualStyleBackColor = true;
@@ -248,19 +248,19 @@
             this.splitContainer3.Panel2.Controls.Add(this.button6);
             this.splitContainer3.Panel2.Controls.Add(this.button5);
             this.splitContainer3.Panel2.Controls.Add(this.txtCode);
-            this.splitContainer3.Size = new System.Drawing.Size(654, 412);
-            this.splitContainer3.SplitterDistance = 217;
+            this.splitContainer3.Size = new System.Drawing.Size(671, 429);
+            this.splitContainer3.SplitterDistance = 222;
             this.splitContainer3.TabIndex = 0;
             // 
             // txtCommandDesc
             // 
             this.txtCommandDesc.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtCommandDesc.Location = new System.Drawing.Point(3, 273);
+            this.txtCommandDesc.Location = new System.Drawing.Point(3, 290);
             this.txtCommandDesc.Multiline = true;
             this.txtCommandDesc.Name = "txtCommandDesc";
             this.txtCommandDesc.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.txtCommandDesc.Size = new System.Drawing.Size(207, 132);
+            this.txtCommandDesc.Size = new System.Drawing.Size(212, 132);
             this.txtCommandDesc.TabIndex = 5;
             // 
             // listAvailableCommands
@@ -279,7 +279,7 @@
             this.listAvailableCommands.Location = new System.Drawing.Point(3, 3);
             this.listAvailableCommands.MultiSelect = false;
             this.listAvailableCommands.Name = "listAvailableCommands";
-            this.listAvailableCommands.Size = new System.Drawing.Size(207, 264);
+            this.listAvailableCommands.Size = new System.Drawing.Size(212, 281);
             this.listAvailableCommands.TabIndex = 4;
             this.listAvailableCommands.UseCompatibleStateImageBehavior = false;
             this.listAvailableCommands.View = System.Windows.Forms.View.Details;
@@ -325,7 +325,7 @@
             this.txtCode.Location = new System.Drawing.Point(3, 25);
             this.txtCode.Name = "txtCode";
             this.txtCode.ShowVRuler = false;
-            this.txtCode.Size = new System.Drawing.Size(423, 380);
+            this.txtCode.Size = new System.Drawing.Size(435, 397);
             this.txtCode.TabIndex = 0;
             this.txtCode.TextChanged += new System.EventHandler(this.TxtCode_TextChanged);
             // 
@@ -605,7 +605,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(692, 484);
+            this.ClientSize = new System.Drawing.Size(709, 501);
             this.Controls.Add(this.tabControl1);
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;

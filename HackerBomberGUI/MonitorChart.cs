@@ -24,6 +24,9 @@ namespace ChartsTest
         public float Max { get => max; set => max = value; }
         public float Min { get => min; set => min = value; }
         public bool LockMaxMin { get => lockMaxMin; set => lockMaxMin = value; }
+        public bool StockMode { get => _StockMode; set => _StockMode = value; }
+
+        bool _StockMode = false;
 
         Graphics graphics = null;
         Graphics buffer = null;
@@ -48,6 +51,12 @@ namespace ChartsTest
 
         Pen line = new Pen(Brushes.Lime, 3);
         Brush brush = Brushes.Lime;
+
+        Pen linedn = new Pen(Brushes.Lime, 3);
+        Brush brushdn = Brushes.Lime;
+
+        Pen lineup = new Pen(Brushes.Red, 3);
+        Brush brushup = Brushes.Red;
 
         Pen bgline = Pens.Gray;
         Pen fgline = new Pen(Brushes.White, 3);
@@ -119,6 +128,19 @@ namespace ChartsTest
                     float tdy= Height - Height * ((values[i] - Min)) / delta ;
                     dy = tdy/12f*10f+ Height /12f;
                     if (lx == 0 && ly == 0) { lx = dx; ly = dy; }
+                    if (_StockMode)
+                    {
+                        if (ly < dy)
+                        {
+                            line = linedn;
+                            brush = brushdn;
+                        }
+                        else
+                        {
+                            line = lineup;
+                            brush = brushup;
+                        }
+                    }
                     buffer.DrawLine(line, dx, dy, lx, ly);
                     lx = dx; ly = dy;
                 }

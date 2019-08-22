@@ -3,6 +3,6 @@
   <PropertyGroup>
     <AndroidDesignerPreferredDevice>Nexus 4</AndroidDesignerPreferredDevice>
     <AndroidDesignerPreferredTheme>AppTheme</AndroidDesignerPreferredTheme>
-    <SelectedDevice>Essential Products PH-1</SelectedDevice>
+    <SelectedDevice>Galaxy_Nexus_API_28</SelectedDevice>
   </PropertyGroup>
 </Project>

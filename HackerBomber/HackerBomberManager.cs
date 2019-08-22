@@ -52,7 +52,7 @@ namespace 专治骗子
                     mSuccessCount++;
                 }
                 else {
-                    Thread.Sleep(100);
+                    Thread.Sleep(InstructionUtils.Rnd().Next() % 1500 + 500);
                 }
             }
         }
