@@ -99,7 +99,7 @@ namespace ScriptInterpreter
             {
                 if (null != OnProgramFinish)
                 {
-                    OnProgramFinish.Invoke(this, this);
+                    OnProgramFinish.Invoke(this, new StackStateMachineEventArgs(this));
                 }
             }
         }
@@ -126,8 +126,12 @@ namespace ScriptInterpreter
 
             if (instruction.Args[0].ArgType == ArgType.ENUM)
             {
-                if (runtimeRegister.ContainsKey(instruction.Args[0].Value)) {
+                if (runtimeRegister.ContainsKey(instruction.Args[0].Value))
+                {
                     HandleGet(machine, instruction);
+                }
+                else {
+                    push(instruction.Args[0].Value);
                 }
             }
             else {
@@ -352,7 +356,7 @@ namespace ScriptInterpreter
         private void print(string arg) {
             if (null != OnProgramPrint)
             {
-                OnProgramPrint.Invoke(this, arg);
+                OnProgramPrint.Invoke(this, new PrintEventArgs(arg));
             }
             else {
                 Console.Write(arg);
@@ -361,9 +365,26 @@ namespace ScriptInterpreter
 
         #endregion
 
-        public event EventHandler<StackStateMachine> OnProgramFinish;
-        public event EventHandler<string> OnProgramPrint;
+        public event EventHandler<StackStateMachineEventArgs> OnProgramFinish;
+        public event EventHandler<PrintEventArgs> OnProgramPrint;
     }
+
+    public class StackStateMachineEventArgs : EventArgs {
+        public StackStateMachineEventArgs(StackStateMachine machine)
+        {
+            this.Machine = machine;
+        }
+        public StackStateMachine Machine { get; set; }
+    }
+
+    public class PrintEventArgs:EventArgs {
+        public PrintEventArgs(string content)
+        {
+            Content = content;
+        }
+        public string Content { get; set; }
+    }
+
 
     public class GenerateHelper {
         //指令集

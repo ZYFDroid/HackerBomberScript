@@ -90,9 +90,9 @@ namespace BomberStudio
             catch { }
         }
 
-        private void Machine_OnProgramPrint(object sender, string e)
+        private void Machine_OnProgramPrint(object sender, PrintEventArgs e)
         {
-            txtOutput.AppendText(e);
+            txtOutput.AppendText(e.Content);
         }
 
         bool saved = true;
@@ -244,13 +244,13 @@ namespace BomberStudio
 
             listRegister.Items.Clear();
             foreach (KeyValuePair<string, string> regs in machine.runtimeRegister.ToArray()) {
-                listRegister.Items.Add(new ListViewItem(new string[] { regs.Key,TextUtil.escapeText(regs.Value)}));
+                listRegister.Items.Add(new ListViewItem(new string[] { regs.Key,(regs.Value)}));
             }
 
             listStack.Items.Clear();
             foreach (string stack in machine.runtimeStack)
             {
-                listStack.Items.Add(TextUtil.escapeText(stack));
+                listStack.Items.Add((stack));
             }
 
         }

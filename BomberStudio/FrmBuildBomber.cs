@@ -79,7 +79,7 @@ namespace BomberStudio
                     script = "#开启RGB\r\n" + script;
                 }
 
-                if (chkUseRGB.Checked)
+                if (chkHideEcho.Checked)
                 {
                     script = "#关闭回显\r\n" + script;
                 }

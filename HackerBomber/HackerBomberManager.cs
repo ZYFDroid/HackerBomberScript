@@ -281,9 +281,9 @@ namespace 专治骗子
             machine.OnProgramPrint += Machine_OnProgramPrint;
         }
         StringBuilder printContent = new StringBuilder();
-        private void Machine_OnProgramPrint(object sender, string e)
+        private void Machine_OnProgramPrint(object sender, PrintEventArgs e)
         {
-            printContent.Append(e);
+            printContent.Append(e.Content);
         }
 
         public event EventHandler<BomberResultEventArgs> OnBomberComplete;
